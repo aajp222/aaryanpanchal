@@ -1095,7 +1095,187 @@ footer .col a:hover { color: var(--accent); }
 
 
 /* ═══════════════════════════════════════════════════
-   21. REDUCED MOTION
+   21. STYLE EXTRAS / COMPONENTS
+═══════════════════════════════════════════════════ */
+
+/* Cursor "VIEW" label */
+.cur-txt {
+  font-family: var(--font-mono);
+  font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--on-accent);
+  opacity: 0; transition: opacity 0.25s;
+}
+@media (hover: hover) and (pointer: fine) {
+  #cur-ring { display: flex; align-items: center; justify-content: center; }
+  body.cur-view #cur-ring {
+    width: 76px; height: 76px; opacity: 1;
+    background: var(--accent); border-color: transparent;
+  }
+  body.cur-view #cur-dot { opacity: 0; }
+  body.cur-view .cur-txt { opacity: 1; }
+}
+
+/* Animated gradient (shimmer) text */
+.shimmer {
+  background: linear-gradient(100deg, var(--ink) 18%, var(--accent) 50%, var(--ink) 82%);
+  background-size: 220% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: shimmer 7s linear infinite;
+}
+@keyframes shimmer { to { background-position: 220% center; } }
+
+/* Availability pill */
+.avail {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-2);
+  border: 1px solid var(--line); border-radius: 100px;
+  padding: 8px 15px; margin-bottom: 1.6rem;
+  background: var(--bg-1);
+}
+.avail .d {
+  width: 6px; height: 6px; border-radius: 50%; background: #5ec27a;
+  box-shadow: 0 0 0 0 rgba(94,194,122,0.6); animation: blink 2.4s ease-in-out infinite;
+}
+
+/* 3D tilt cards */
+.tilt { transition: transform 0.4s var(--ease), background 0.35s; transform-style: preserve-3d; }
+
+/* Manifesto slab */
+.manifesto {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: clamp(6rem, 14vw, 11rem) var(--gutter);
+  border-top: 1px solid var(--line-soft);
+  text-align: center;
+}
+.manifesto-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4.6vw, 4.2rem);
+  font-weight: 300; line-height: 1.18; letter-spacing: -0.025em;
+  color: var(--ink); max-width: 18ch; margin: 0 auto;
+}
+.manifesto-text em { font-style: italic; color: var(--accent); }
+.manifesto-sig {
+  margin-top: 2.5rem; font-family: var(--font-mono);
+  font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+}
+
+/* Reverse marquee variant */
+.marquee-track.rev { animation: marqueeRev 50s linear infinite; }
+@keyframes marqueeRev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+/* Giant kinetic footer wordmark */
+.bigfoot {
+  border-top: 1px solid var(--line-soft);
+  padding: clamp(3rem, 8vw, 6rem) var(--gutter) 0;
+  overflow: hidden; position: relative; isolation: isolate;
+}
+.bigfoot-name {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 17vw, 15rem);
+  font-weight: 400; line-height: 0.82; letter-spacing: -0.04em;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line); text-stroke: 1px var(--line);
+  transition: -webkit-text-stroke 0.4s, color 0.4s;
+}
+.bigfoot:hover .bigfoot-name { color: var(--bg-2); -webkit-text-stroke: 1px var(--accent); }
+
+/* Media (image) slots with reveal + zoom */
+.media {
+  position: relative; overflow: hidden; border-radius: 14px;
+  background: var(--bg-2); border: 1px solid var(--line-soft);
+}
+.media img { width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.1); transition: transform 1.3s var(--ease); }
+.js .reveal.in .media img, .media.in img { transform: none; }
+.media .ph {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  color: var(--ink-3); font-family: var(--font-mono);
+  font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+  border: 1px dashed var(--line); border-radius: 14px; text-align: center; padding: 1rem;
+}
+.media .ph svg { width: 28px; height: 28px; opacity: 0.6; }
+
+
+/* ═══════════════════════════════════════════════════
+   22. CASE STUDY PAGE
+═══════════════════════════════════════════════════ */
+
+.cs-hero {
+  padding: clamp(8rem, 16vw, 12rem) var(--gutter) clamp(3rem, 6vw, 5rem);
+  max-width: var(--maxw); margin: 0 auto;
+  position: relative; overflow: hidden; isolation: isolate;
+}
+.cs-back {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-2); margin-bottom: 2rem; transition: gap 0.3s, color 0.25s;
+}
+.cs-back:hover { gap: 15px; color: var(--accent); }
+.cs-title {
+  font-family: var(--font-display);
+  font-size: var(--step-4); font-weight: 400; letter-spacing: -0.035em; line-height: 0.92;
+  color: var(--ink); margin: 0.4rem 0 1.6rem;
+}
+.cs-sub { font-size: var(--step-1); font-weight: 300; color: var(--ink-2); line-height: 1.5; max-width: 42ch; }
+.cs-meta {
+  display: flex; flex-wrap: wrap; gap: clamp(1.5rem, 4vw, 3rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem); padding-top: 2rem;
+  border-top: 1px solid var(--line-soft);
+}
+.cs-meta .k { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 7px; }
+.cs-meta .v { font-size: 0.92rem; color: var(--ink); }
+
+.cs-figure { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+.cs-figure .media { min-height: clamp(280px, 48vw, 620px); }
+
+.cs-section {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7rem) var(--gutter);
+  display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+.cs-section + .cs-section { border-top: 1px solid var(--line-soft); }
+.cs-section .cs-h {
+  font-family: var(--font-display); font-size: var(--step-2); font-weight: 400;
+  letter-spacing: -0.02em; line-height: 1.05; color: var(--ink);
+  position: sticky; top: 100px;
+}
+.cs-section .cs-body p {
+  font-size: var(--step-0); color: var(--ink-2); line-height: 1.75; margin-bottom: 1.3rem;
+}
+.cs-section .cs-body p strong { color: var(--ink); font-weight: 500; }
+.cs-section .cs-body p:last-child { margin-bottom: 0; }
+
+.cs-gallery {
+  max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter) clamp(4rem,9vw,7rem);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+}
+.cs-gallery .media { aspect-ratio: 3/4; }
+.cs-cap { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.06em; color: var(--ink-3); margin-top: 12px; }
+
+.cs-stats {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: clamp(4rem,9vw,6rem) var(--gutter);
+  border-top: 1px solid var(--line-soft);
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(1.5rem,4vw,3rem);
+}
+.cs-stat .n { font-family: var(--font-display); font-size: clamp(2.4rem,5vw,3.6rem); font-weight: 400; letter-spacing: -0.03em; color: var(--ink); line-height: 1; }
+.cs-stat .l { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.06em; color: var(--ink-3); margin-top: 10px; }
+
+@media (max-width: 820px) {
+  .cs-section { grid-template-columns: 1fr; gap: 1.5rem; }
+  .cs-section .cs-h { position: static; }
+  .cs-gallery { grid-template-columns: 1fr; }
+  .cs-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+
+/* ═══════════════════════════════════════════════════
+   23. REDUCED MOTION
 ═══════════════════════════════════════════════════ */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1109,5 +1289,8 @@ footer .col a:hover { color: var(--accent); }
   .js .reveal { opacity: 1 !important; transform: none !important; }
   .js .split-words .w-in { opacity: 1 !important; transform: none !important; filter: none !important; }
   .parx, .drift, .bgword { transform: none !important; }
+  .shimmer { animation: none !important; -webkit-text-fill-color: var(--ink); color: var(--ink); }
+  .tilt { transform: none !important; }
+  .media img { transform: none !important; }
   #preloader { display: none !important; }
 }

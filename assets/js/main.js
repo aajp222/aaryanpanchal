@@ -83,6 +83,31 @@
   }
 
 
+  /* ── CURSOR "VIEW" LABEL ───────────────────────────── */
+  if (fine && !reduced) {
+    document.querySelectorAll('[data-cursor]').forEach((el) => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cur-view'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cur-view'));
+    });
+  }
+
+
+  /* ── 3D TILT CARDS ─────────────────────────────────── */
+  if (fine && !reduced) {
+    document.querySelectorAll('.tilt').forEach((el) => {
+      const max = 5;
+      el.addEventListener('mousemove', (e) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transform =
+          `perspective(1000px) rotateX(${-py * max}deg) rotateY(${px * max}deg) translateZ(0)`;
+      });
+      el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+    });
+  }
+
+
   /* ── NAV ON SCROLL ─────────────────────────────────── */
   const nav = document.getElementById('nav');
   if (nav) {

@@ -77,7 +77,7 @@
   <div class="vignette" aria-hidden="true"></div>
   <div class="scroll-prog" aria-hidden="true"><span></span></div>
   <div id="cur-dot" aria-hidden="true"></div>
-  <div id="cur-ring" aria-hidden="true"></div>
+  <div id="cur-ring" aria-hidden="true"><span class="cur-txt">View</span></div>
 
   <!-- ─── PRELOADER ─────────────────────────────────── -->
   <div id="preloader" aria-hidden="true">
@@ -134,6 +134,7 @@
     <div class="hero-glow g2" aria-hidden="true"></div>
 
     <div class="hero-inner">
+      <span class="avail"><span class="d"></span> Open to internships &amp; collaborations</span>
       <p class="hero-label">Mechanical Engineer · Founder · WPI</p>
 
       <h1 class="hero-name">
@@ -143,8 +144,8 @@
 
       <p class="hero-tagline">
         Mechanical engineer and medical-device founder. I work in the
-        space between <span class="hl">how things work</span> and
-        <span class="hl">why they matter</span> — designing hardware
+        space between <span class="hl shimmer">how things work</span> and
+        <span class="hl shimmer">why they matter</span> — designing hardware
         people can actually rely on.
       </p>
 
@@ -194,7 +195,7 @@
     </div>
 
     <!-- EpiSafe feature -->
-    <article class="feature reveal">
+    <article class="feature reveal tilt" data-cursor="view">
       <div class="feature-visual">
         <span class="index">FIG. 01 — EPISAFE</span>
         <!-- Swap this block for <img src="assets/img/episafe.jpg" alt="EpiSafe device"> -->
@@ -234,13 +235,13 @@
             </div>
           </div>
         </div>
-        <a href="#connect" class="arrow-link">Read the case study <span aria-hidden="true">→</span></a>
+        <a href="episafe.html" class="arrow-link">Read the case study <span aria-hidden="true">→</span></a>
       </div>
     </article>
 
     <!-- Secondary projects (replace placeholders with real work) -->
     <div class="card-grid">
-      <article class="proj reveal d1">
+      <article class="proj reveal d1 tilt">
         <div class="proj-label"><span>Engineering Design</span><span>02</span></div>
         <h3 class="proj-title">Your strongest design build</h3>
         <p class="proj-desc">
@@ -252,7 +253,7 @@
           <span class="tag">CAD</span><span class="tag">FEA</span><span class="tag">Fabrication</span>
         </div>
       </article>
-      <article class="proj reveal d2">
+      <article class="proj reveal d2 tilt">
         <div class="proj-label"><span>Research · WPI</span><span>03</span></div>
         <h3 class="proj-title">Research or leadership work</h3>
         <p class="proj-desc">
@@ -303,6 +304,17 @@
       </div>
     </div>
   </section>
+
+  <!-- ─── MANIFESTO ─────────────────────────────────── -->
+  <section class="manifesto has-bg">
+    <span class="bgword drift" style="--drift: -110; top: 18%; right: -2%;" aria-hidden="true">MAKE</span>
+    <p class="manifesto-text split-words">
+      I'd rather build one thing people <em>truly</em> depend on than ten they
+      merely notice.
+    </p>
+    <p class="manifesto-sig reveal">— The whole point, basically</p>
+  </section>
+
 
   <!-- ─── APPROACH ──────────────────────────────────── -->
   <section class="section has-bg" id="approach">
@@ -369,6 +381,25 @@
     </div>
   </section>
 
+  <!-- ─── REVERSE MARQUEE ───────────────────────────── -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track rev">
+      <span class="m-item">Curious</span>
+      <span class="m-item">Rigorous</span>
+      <span class="m-item">User-obsessed</span>
+      <span class="m-item">Resourceful</span>
+      <span class="m-item">Honest by default</span>
+      <span class="m-item">Relentless</span>
+      <span class="m-item">Curious</span>
+      <span class="m-item">Rigorous</span>
+      <span class="m-item">User-obsessed</span>
+      <span class="m-item">Resourceful</span>
+      <span class="m-item">Honest by default</span>
+      <span class="m-item">Relentless</span>
+    </div>
+  </div>
+
+
   <!-- ─── CONNECT ───────────────────────────────────── -->
   <section class="section has-bg" id="connect">
     <span class="bgword drift" style="--drift: 90; top: 12%; left: 6%;" aria-hidden="true">HELLO</span>
@@ -391,6 +422,11 @@
       </div>
     </div>
   </section>
+
+  <!-- ─── BIG WORDMARK ──────────────────────────────── -->
+  <div class="bigfoot" aria-hidden="true">
+    <div class="bigfoot-name drift" style="--drift: 55;">Aaryan Panchal</div>
+  </div>
 
   <!-- ─── FOOTER ────────────────────────────────────── -->
   <footer>
