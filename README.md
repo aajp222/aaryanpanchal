@@ -51,12 +51,26 @@ visitor's saved choice still wins via `localStorage`).
 
 ## Before you launch — checklist
 
+- [x] **Logo** wired in (`logoaaryanwhite.png` on dark, `logoaaryanblack.png` on light) — nav + preloader.
+- [x] **EpiSafe case-study page** (`episafe.html`) built and linked.
+- [ ] Drop **EpiSafe photos** into `assets/img/` and swap the `.media .ph`
+      placeholders in `episafe.html` (and the `.feature-visual` on the homepage)
+      for `<img>` tags. Each placeholder says exactly what image goes there.
 - [ ] Replace the **two placeholder project cards** in the Work section.
-- [ ] Add a real **EpiSafe photo** (swap the animated placeholder in `.feature-visual`).
 - [ ] Set your **GitHub** and **Resume** links (Connect section + footer).
 - [ ] Add an **OG image** at `assets/img/og.png` (1200×630) for link previews.
 - [ ] Confirm the **LinkedIn** URL is correct.
-- [ ] (Optional) design a real **favicon**.
+- [ ] (Optional) export a proper **favicon** from your logo (the current one is a
+      self-contained SVG stand-in so it's always visible).
+
+### Swapping an image slot
+Find a placeholder like this and replace the inner `.ph` div with your photo:
+```html
+<div class="media" data-cursor="view">
+  <img src="assets/img/episafe-hero.jpg" alt="EpiSafe device in context" />
+</div>
+```
+The reveal + zoom animation works automatically.
 
 ---
 
@@ -80,8 +94,8 @@ No environment variables, no server, no database.
 - Add OG image + favicon. Deploy to the custom domain. Run Lighthouse.
 
 **Phase 2 — Depth (weeks 2–4)**
-- Build a full **EpiSafe case study** page (`/episafe`): problem → research →
-  prototypes → what's next, with real images.
+- [x] Full **EpiSafe case study** page (`episafe.html`): problem → discovery →
+  prototypes → how-it-works → what's next. *Add the real images.*
 - Add a one-click **resume download** in the nav.
 
 **Phase 3 — Voice (ongoing)**
