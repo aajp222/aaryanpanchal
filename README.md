@@ -1,109 +1,99 @@
 # aaryanpanchal.com
 
-Personal site for **Aaryan Panchal** — mechanical engineer, medical-device
-founder (EpiSafe), WPI. A fast, minimal, editorial single-page site with a
-warm-dark aesthetic.
+Personal site for **Aaryan Panchal** — mechanical engineer, founder of
+**EpiSafe** (an epinephrine auto-injector thin enough to live in a phone case),
+and Co-Marketing Chair of WPI's Student Government.
 
-> Design rationale, layouts, the visual system, and the component inventory
-> live in **[DESIGN.md](./DESIGN.md)**.
+A fast, editorial, dark single-page site with a signature **scroll-driven phone
+dock**, a **per-role theme-morph** (EpiSafe orange ↔ SGA crimson ↔ neutral),
+and a dedicated EpiSafe case-study page.
+
+> Architecture, the visual system, and the component inventory live in
+> **[DESIGN.md](./DESIGN.md)**.
 
 ---
 
 ## Stack
 
-Zero build step. Just static files — open `index.html` and it runs.
+Zero build step — static files. Open `index.html` and it runs.
 
 ```
-index.html              # markup + all section copy
+index.html              # homepage
+episafe.html            # EpiSafe case study
 assets/css/main.css     # design tokens + every style
 assets/js/main.js       # interactions (no dependencies)
-assets/img/             # photos, OG image (add yours here)
+assets/fonts/           # Paul Grotesk (Thin / Regular / Bold)
+assets/img/             # real product renders, photos, logos
 DESIGN.md               # architecture, design system, roadmap
 ```
 
-Fonts (Fraunces · Inter · JetBrains Mono) load from Google Fonts.
+JetBrains Mono loads from Google Fonts; Paul Grotesk is bundled locally.
 
 ---
 
 ## Run it locally
 
-Open the file directly, or serve it (recommended, so relative paths behave):
+Serve it (so relative font/image paths resolve):
 
 ```bash
-python3 -m http.server 8000
-# then visit http://localhost:8000
+python3 -m http.server 8000   # then open http://localhost:8000
 ```
 
 ---
 
-## Edit the content
+## What's signature here
+
+- **Fly-down phone dock** — the hero phone (EpiSafe on the back of a phone)
+  detaches and flies down the page as you scroll, docking precisely into the
+  EpiSafe card. One shared element driven by scroll progress.
+- **Per-role theme-morph** — the whole palette tweens from **EpiSafe orange**
+  to **WPI crimson** in the SGA section, then a **neutral** close. The nav pill
+  tracks the active role.
+- **Polish layer** — scroll-progress bar, section index rail, custom cursor
+  with a "View" label, 3D-tilt media cards, count-up stats, scatter→assemble
+  headlines, a preloader, plus aurora / film-grain / vignette background FX.
+
+Everything degrades gracefully and is disabled under `prefers-reduced-motion`.
+
+---
+
+## Editing
 
 | To change… | Edit… |
 |---|---|
-| Any words on the page | `index.html` (copy is inline, by section) |
-| Colours, type, spacing, motion | the tokens at the top of `assets/css/main.css` |
-| Behaviour (cursor, reveal, theme) | `assets/js/main.js` |
+| Copy / sections / stats | `index.html` and `episafe.html` |
+| Colours, type, motion, theme-morph | tokens at the top of `assets/css/main.css` |
+| Behaviour (dock, cursor, reveal, theme) | `assets/js/main.js` |
+| Background FX default | the inline `<script>` in each page head (`data-bg`, `--fx-intensity`, `--fx-speed`) |
 
-Switch the default theme by changing `data-theme="dark"` on `<html>` (a
-visitor's saved choice still wins via `localStorage`).
+The background FX (`aurora` by default, dialed to a subtle ~0.6 intensity) can be
+set to `mesh`, `grid`, `spotlight`, or `void` by changing `data-bg` in the head.
 
 ---
 
 ## Before you launch — checklist
 
-- [x] **Logo** wired in (`logoaaryanwhite.png` on dark, `logoaaryanblack.png` on light) — nav + preloader.
-- [x] **EpiSafe case-study page** (`episafe.html`) built and linked.
-- [ ] Drop **EpiSafe photos** into `assets/img/` and swap the `.media .ph`
-      placeholders in `episafe.html` (and the `.feature-visual` on the homepage)
-      for `<img>` tags. Each placeholder says exactly what image goes there.
-- [ ] Replace the **two placeholder project cards** in the Work section.
-- [ ] Set your **GitHub** and **Resume** links (Connect section + footer).
-- [ ] Add an **OG image** at `assets/img/og.png` (1200×630) for link previews.
-- [ ] Confirm the **LinkedIn** URL is correct.
-- [ ] (Optional) export a proper **favicon** from your logo (the current one is a
-      self-contained SVG stand-in so it's always visible).
-
-### Swapping an image slot
-Find a placeholder like this and replace the inner `.ph` div with your photo:
-```html
-<div class="media" data-cursor="view">
-  <img src="assets/img/episafe-hero.jpg" alt="EpiSafe device in context" />
-</div>
-```
-The reveal + zoom animation works automatically.
+- [x] Real product renders, team/lab photos, awards, Paul Grotesk, logo — all wired in.
+- [x] EpiSafe case-study page built and linked.
+- [ ] Confirm award/stat wording (Demo Day placement, $6.6B market, 11.4 mm, 0.3 mg, 56%).
+- [ ] Add **GitHub** and a **resume** link (Connect + nav) if you want them.
+- [ ] Optimise `demoday.jpg` (~10 MB) and other large renders before launch (e.g. to WebP).
+- [ ] Confirm the **LinkedIn** URL.
 
 ---
 
 ## Deploy
 
-Any static host works. Easiest paths:
-
-1. **GitHub Pages** — push to `main`, enable Pages, point the `aaryanpanchal.com`
-   DNS at it.
-2. **Netlify / Vercel / Cloudflare Pages** — drag-and-drop or connect this repo;
-   add the custom domain in the dashboard.
-
-No environment variables, no server, no database.
+Any static host. Easiest: **GitHub Pages**, **Netlify**, **Vercel**, or
+**Cloudflare Pages** — push the repo, point `aaryanpanchal.com` at it. No server,
+no env vars.
 
 ---
 
 ## Roadmap
 
-**Phase 1 — Launch-ready (now → ~1 week)**
-- Replace placeholders, add EpiSafe photo, wire real links.
-- Add OG image + favicon. Deploy to the custom domain. Run Lighthouse.
-
-**Phase 2 — Depth (weeks 2–4)**
-- [x] Full **EpiSafe case study** page (`episafe.html`): problem → discovery →
-  prototypes → how-it-works → what's next. *Add the real images.*
-- Add a one-click **resume download** in the nav.
-
-**Phase 3 — Voice (ongoing)**
-- A lightweight **Writing / Notes** section — short posts on what you're
-  learning (biosensing, FDA pathways, building hardware). This is what turns a
-  portfolio into a reason to follow you.
-- Real metrics in the stat counters as the project grows.
-
-**Phase 4 — Polish**
-- Custom OG image per page, analytics (privacy-friendly, e.g. Plausible),
-  and an accessibility + performance audit pass.
+- **Now:** confirm copy/stats, add GitHub + resume links, compress large images.
+- **Next:** a third role/theme as Aaryan adds work (just another
+  `data-section-theme` block); real SGA reach numbers; interview pull-quotes in
+  the case study.
+- **Later:** custom OG image, privacy-friendly analytics, performance pass.
