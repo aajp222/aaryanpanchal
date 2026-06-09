@@ -215,6 +215,77 @@
     pick();
   })();
 
+  /* ── BOOKING: scroll-driven cinematic reel (book.html) ── */
+  (function(){
+    var reel=document.getElementById('reel'); if(!reel) return;
+    var play=reel.querySelector('.reel-play');
+    var time=reel.querySelector('.reel-time');
+    var vid=reel.querySelector('video');
+    function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+    if(reduce){ reel.style.setProperty('--p','1'); return; }
+
+    // If a real video source is wired up, let it autoplay as ambient footage.
+    if(vid && vid.querySelector('source')){
+      vid.muted=true;
+      var io=new IntersectionObserver(function(es){ es.forEach(function(en){
+        if(en.isIntersecting){ vid.play().catch(function(){}); } else { vid.pause(); }
+      }); }, {threshold:.15});
+      io.observe(reel);
+    }
+
+    var ticking=false;
+    function update(){
+      ticking=false;
+      var total=reel.offsetHeight-innerHeight;
+      var p=total>0 ? clamp(-reel.getBoundingClientRect().top/total,0,1) : 0;
+      reel.style.setProperty('--p',p.toFixed(4));
+      if(play) play.style.opacity=Math.max(0,1-p*2.4);
+      if(time){ var t=Math.round(p*100); time.textContent='00:'+(t<10?'0'+t:t); }
+    }
+    function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
+    addEventListener('scroll',onScroll,{passive:true});
+    addEventListener('resize',onScroll);
+    update();
+  })();
+
+  /* ── BOOKING: compose request as an email (book.html) ── */
+  (function(){
+    var form=document.getElementById('bookForm'); if(!form) return;
+    var EMAIL='aaryanpanchal270@gmail.com';
+
+    // Package buttons preselect a shoot type and jump to the form.
+    document.querySelectorAll('[data-pick]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        var val=btn.getAttribute('data-pick');
+        var input=form.querySelector('input[name="type"][value="'+val+'"]');
+        if(input) input.checked=true;
+      });
+    });
+
+    function val(name){ var el=form.elements[name]; return el ? (el.value||'').trim() : ''; }
+    function typeVal(){ var c=form.querySelector('input[name="type"]:checked'); return c?c.value:'Not specified'; }
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name=val('name'), email=val('email'), date=val('date'),
+          loc=val('location'), budget=val('budget'), details=val('details'), type=typeVal();
+      var subject='Shoot booking — '+type+(name?(' · '+name):'');
+      var body=
+        'Hi Aaryan — I\'d like to book a shoot.\n\n'+
+        'Name: '+(name||'—')+'\n'+
+        'Email: '+(email||'—')+'\n'+
+        'Shoot type: '+type+'\n'+
+        'Preferred date: '+(date||'Flexible')+'\n'+
+        'Location: '+(loc||'—')+'\n'+
+        'Budget: '+(budget||'—')+'\n\n'+
+        'Details:\n'+(details||'—')+'\n';
+      var sent=form.querySelector('.book-sent-link');
+      if(sent) sent.href='mailto:'+EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+      window.location.href='mailto:'+EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+      form.classList.add('sent');
+    });
+  })();
+
   /* ── YEAR ── */
   var y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
 })();
