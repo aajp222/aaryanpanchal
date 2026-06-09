@@ -28,6 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="preload" as="image" href="assets/img/product-hero.png" fetchpriority="high" />
 
   <!-- Pre-paint: enable JS hooks + set background FX defaults (no flash) -->
   <script>
@@ -104,7 +105,7 @@
     <div class="hero-glow" aria-hidden="true"></div>
     <p class="hero-eyebrow">Aaryan</p>
     <h1 class="hero-word" id="heroWord">Panchal</h1>
-    <img class="hero-phone" id="heroPhone" src="assets/img/product-hero.png" alt="EpiSafe — an epinephrine auto-injector that mounts to the back of a phone" />
+    <img class="hero-phone" id="heroPhone" src="assets/img/product-hero.png" fetchpriority="high" decoding="async" alt="EpiSafe — an epinephrine auto-injector that mounts to the back of a phone" />
     <div class="hero-foot">
       <p class="hero-tag">Mechanical engineer &amp; founder of <b>EpiSafe</b> — epinephrine that lives in your phone case.</p>
       <div class="scroll-cue"><span>Scroll</span><span class="bar" aria-hidden="true"></span></div>
@@ -205,7 +206,7 @@
     <div class="feature">
       <div class="feature-media reveal tilt" data-cursor="view" style="aspect-ratio:4/5;background:linear-gradient(160deg,#1b0d10,#0c0708)">
         <span class="figtag">Fig. 03 — SGA campaign work</span>
-        <img loading="lazy" decoding="async" src="assets/img/sga-cotw.png" alt="A WPI SGA Club of the Week campaign poster designed by Aaryan" style="width:74%;border-radius:14px;box-shadow:0 30px 60px rgba(0,0,0,.5)" />
+        <img loading="lazy" decoding="async" src="assets/img/sga-cotw.jpg" alt="A WPI SGA Club of the Week campaign poster designed by Aaryan" style="width:74%;border-radius:14px;box-shadow:0 30px 60px rgba(0,0,0,.5)" />
       </div>
       <div class="feature-body reveal">
         <p class="feature-role">Co-Marketing Chair · SGA · 2024 – Present</p>
@@ -227,7 +228,7 @@
     </div>
 
     <div class="poster-row reveal" style="grid-template-columns:repeat(3,1fr)">
-      <figure class="tilt"><img loading="lazy" decoding="async" src="assets/img/sga-title.png" alt="WPI SGA campaign poster" /><figcaption>Financial Fridays</figcaption></figure>
+      <figure class="tilt"><img loading="lazy" decoding="async" src="assets/img/sga-title.jpg" alt="WPI SGA campaign poster" /><figcaption>Financial Fridays</figcaption></figure>
       <figure class="tilt"><img loading="lazy" decoding="async" src="assets/img/aaryan-sga.jpg" alt="Aaryan Panchal" /><figcaption>Co-Marketing Chair</figcaption></figure>
       <figure class="tilt"><img loading="lazy" decoding="async" src="assets/img/wpi-gameday.jpg" alt="Aaryan running game-day media at WPI Athletics" /><figcaption>Game day · WPI</figcaption></figure>
     </div>
