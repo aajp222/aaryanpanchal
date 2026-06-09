@@ -215,6 +215,96 @@
     pick();
   })();
 
+  /* ── BOOKING: scroll-driven cinematic reel (book.html) ── */
+  (function(){
+    var reel=document.getElementById('reel'); if(!reel) return;
+    var canvas=document.getElementById('reelCanvas');
+    var play=reel.querySelector('.reel-play');
+    var time=reel.querySelector('.reel-time');
+    function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+
+    // Preloaded image sequence painted to a <canvas>. Scrubbing this way has
+    // zero seek/decode latency (unlike video.currentTime), so the footage
+    // advances perfectly smoothly with scroll position.
+    var FRAMES=50;
+    var ctx=(canvas&&canvas.getContext)?canvas.getContext('2d'):null;
+    var imgs=new Array(FRAMES), ready=new Array(FRAMES), drawn=-1, target=0;
+    function src(i){ return 'assets/reel/f_'+(''+(i+1)).padStart(3,'0')+'.webp'; }
+    function draw(i){
+      if(!ctx) return;
+      if(!ready[i]){ // not loaded yet — paint the nearest frame we do have
+        var j=i; while(j>=0&&!ready[j]) j--;
+        if(j<0){ j=i; while(j<FRAMES&&!ready[j]) j++; }
+        if(j<0||j>=FRAMES||!ready[j]) return; i=j;
+      }
+      if(i===drawn) return; drawn=i;
+      ctx.drawImage(imgs[i],0,0,canvas.width,canvas.height);
+    }
+    if(ctx){
+      for(var k=0;k<FRAMES;k++){ (function(k){
+        var im=new Image(); im.decoding='async';
+        im.onload=function(){ ready[k]=true; if(drawn===-1||k===target) draw(target); };
+        im.src=src(k); imgs[k]=im;
+      })(k); }
+    }
+
+    if(reduce){ reel.style.setProperty('--p','1'); return; }
+
+    var ticking=false;
+    function update(){
+      ticking=false;
+      var total=reel.offsetHeight-innerHeight;
+      var p=total>0 ? clamp(-reel.getBoundingClientRect().top/total,0,1) : 0;
+      reel.style.setProperty('--p',p.toFixed(4));
+      if(play) play.style.opacity=Math.max(0,1-p*2.4);
+      if(time){ var t=Math.round(p*10); time.textContent='00:'+(t<10?'0'+t:t); }
+      target=Math.round(p*(FRAMES-1));
+      draw(target);
+    }
+    function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
+    addEventListener('scroll',onScroll,{passive:true});
+    addEventListener('resize',onScroll);
+    update();
+  })();
+
+  /* ── BOOKING: compose request as an email (book.html) ── */
+  (function(){
+    var form=document.getElementById('bookForm'); if(!form) return;
+    var EMAIL='aaryanpanchal@icloud.com';
+
+    // Package buttons preselect a shoot type and jump to the form.
+    document.querySelectorAll('[data-pick]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        var val=btn.getAttribute('data-pick');
+        var input=form.querySelector('input[name="type"][value="'+val+'"]');
+        if(input) input.checked=true;
+      });
+    });
+
+    function val(name){ var el=form.elements[name]; return el ? (el.value||'').trim() : ''; }
+    function typeVal(){ var c=form.querySelector('input[name="type"]:checked'); return c?c.value:'Not specified'; }
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name=val('name'), email=val('email'), date=val('date'),
+          loc=val('location'), budget=val('budget'), details=val('details'), type=typeVal();
+      var subject='Shoot booking — '+type+(name?(' · '+name):'');
+      var body=
+        'Hi Aaryan — I\'d like to book a shoot.\n\n'+
+        'Name: '+(name||'—')+'\n'+
+        'Email: '+(email||'—')+'\n'+
+        'Shoot type: '+type+'\n'+
+        'Preferred date: '+(date||'Flexible')+'\n'+
+        'Location: '+(loc||'—')+'\n'+
+        'Budget: '+(budget||'—')+'\n\n'+
+        'Details:\n'+(details||'—')+'\n';
+      var sent=form.querySelector('.book-sent-link');
+      if(sent) sent.href='mailto:'+EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+      window.location.href='mailto:'+EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+      form.classList.add('sent');
+    });
+  })();
+
   /* ── YEAR ── */
   var y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
 })();
