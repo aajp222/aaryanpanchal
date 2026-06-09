@@ -104,10 +104,10 @@
   <section class="reel" id="reel" aria-label="Aerial reel">
     <div class="reel-sticky">
       <div class="reel-frame" data-cursor="view">
-        <video class="reel-media" muted loop playsinline preload="auto"
-                poster="assets/img/reel-poster.jpg" aria-label="Aerial drone footage over New England fall foliage">
-          <source src="assets/video/reel.mp4" type="video/mp4" />
-        </video>
+        <canvas class="reel-media" id="reelCanvas" width="1152" height="648"
+                role="img" aria-label="Aerial drone footage over New England fall foliage"
+                style="background:#06080c url('assets/img/reel-poster.jpg') center/cover no-repeat"></canvas>
+        <noscript><img class="reel-media" src="assets/img/reel-poster.jpg" alt="Aerial drone shot over New England fall foliage" /></noscript>
         <div class="reel-bar top" aria-hidden="true"></div>
         <div class="reel-bar bot" aria-hidden="true"></div>
         <div class="reel-tag"><span class="rec" aria-hidden="true"></span> Reel ’26 · 4K</div>

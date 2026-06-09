@@ -218,28 +218,39 @@
   /* ── BOOKING: scroll-driven cinematic reel (book.html) ── */
   (function(){
     var reel=document.getElementById('reel'); if(!reel) return;
+    var canvas=document.getElementById('reelCanvas');
     var play=reel.querySelector('.reel-play');
     var time=reel.querySelector('.reel-time');
-    var vid=reel.querySelector('video');
     function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
-    if(reduce){ reel.style.setProperty('--p','1'); return; }
 
-    // Scrub the drone footage to scroll position (the video "plays" as you scroll).
-    var dur=0, scrub=false, primed=false;
-    if(vid){
-      vid.muted=true; vid.playsInline=true; vid.pause();
-      vid.addEventListener('loadedmetadata', function(){
-        dur=vid.duration; scrub=isFinite(dur)&&dur>0; update();
-      });
-      // One nudge on first interaction lets iOS allow programmatic seeking.
-      function prime(){ if(primed) return; primed=true; vid.play().then(function(){ vid.pause(); }).catch(function(){}); }
-      addEventListener('touchstart',prime,{once:true,passive:true});
-      addEventListener('pointerdown',prime,{once:true});
-      addEventListener('scroll',prime,{once:true,passive:true});
-      vid.load();
+    // Preloaded image sequence painted to a <canvas>. Scrubbing this way has
+    // zero seek/decode latency (unlike video.currentTime), so the footage
+    // advances perfectly smoothly with scroll position.
+    var FRAMES=50;
+    var ctx=(canvas&&canvas.getContext)?canvas.getContext('2d'):null;
+    var imgs=new Array(FRAMES), ready=new Array(FRAMES), drawn=-1, target=0;
+    function src(i){ return 'assets/reel/f_'+(''+(i+1)).padStart(3,'0')+'.webp'; }
+    function draw(i){
+      if(!ctx) return;
+      if(!ready[i]){ // not loaded yet — paint the nearest frame we do have
+        var j=i; while(j>=0&&!ready[j]) j--;
+        if(j<0){ j=i; while(j<FRAMES&&!ready[j]) j++; }
+        if(j<0||j>=FRAMES||!ready[j]) return; i=j;
+      }
+      if(i===drawn) return; drawn=i;
+      ctx.drawImage(imgs[i],0,0,canvas.width,canvas.height);
+    }
+    if(ctx){
+      for(var k=0;k<FRAMES;k++){ (function(k){
+        var im=new Image(); im.decoding='async';
+        im.onload=function(){ ready[k]=true; if(drawn===-1||k===target) draw(target); };
+        im.src=src(k); imgs[k]=im;
+      })(k); }
     }
 
-    var ticking=false, lastCT=-1;
+    if(reduce){ reel.style.setProperty('--p','1'); return; }
+
+    var ticking=false;
     function update(){
       ticking=false;
       var total=reel.offsetHeight-innerHeight;
@@ -247,10 +258,8 @@
       reel.style.setProperty('--p',p.toFixed(4));
       if(play) play.style.opacity=Math.max(0,1-p*2.4);
       if(time){ var t=Math.round(p*10); time.textContent='00:'+(t<10?'0'+t:t); }
-      if(vid && scrub){
-        var ct=clamp(p*dur,0,dur-0.05);
-        if(Math.abs(ct-lastCT)>0.03){ lastCT=ct; try{ vid.currentTime=ct; }catch(e){} }
-      }
+      target=Math.round(p*(FRAMES-1));
+      draw(target);
     }
     function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
     addEventListener('scroll',onScroll,{passive:true});
