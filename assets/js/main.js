@@ -224,23 +224,33 @@
     function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
     if(reduce){ reel.style.setProperty('--p','1'); return; }
 
-    // If a real video source is wired up, let it autoplay as ambient footage.
-    if(vid && vid.querySelector('source')){
-      vid.muted=true;
-      var io=new IntersectionObserver(function(es){ es.forEach(function(en){
-        if(en.isIntersecting){ vid.play().catch(function(){}); } else { vid.pause(); }
-      }); }, {threshold:.15});
-      io.observe(reel);
+    // Scrub the drone footage to scroll position (the video "plays" as you scroll).
+    var dur=0, scrub=false, primed=false;
+    if(vid){
+      vid.muted=true; vid.playsInline=true; vid.pause();
+      vid.addEventListener('loadedmetadata', function(){
+        dur=vid.duration; scrub=isFinite(dur)&&dur>0; update();
+      });
+      // One nudge on first interaction lets iOS allow programmatic seeking.
+      function prime(){ if(primed) return; primed=true; vid.play().then(function(){ vid.pause(); }).catch(function(){}); }
+      addEventListener('touchstart',prime,{once:true,passive:true});
+      addEventListener('pointerdown',prime,{once:true});
+      addEventListener('scroll',prime,{once:true,passive:true});
+      vid.load();
     }
 
-    var ticking=false;
+    var ticking=false, lastCT=-1;
     function update(){
       ticking=false;
       var total=reel.offsetHeight-innerHeight;
       var p=total>0 ? clamp(-reel.getBoundingClientRect().top/total,0,1) : 0;
       reel.style.setProperty('--p',p.toFixed(4));
       if(play) play.style.opacity=Math.max(0,1-p*2.4);
-      if(time){ var t=Math.round(p*100); time.textContent='00:'+(t<10?'0'+t:t); }
+      if(time){ var t=Math.round(p*10); time.textContent='00:'+(t<10?'0'+t:t); }
+      if(vid && scrub){
+        var ct=clamp(p*dur,0,dur-0.05);
+        if(Math.abs(ct-lastCT)>0.03){ lastCT=ct; try{ vid.currentTime=ct; }catch(e){} }
+      }
     }
     function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
     addEventListener('scroll',onScroll,{passive:true});
@@ -251,7 +261,7 @@
   /* ── BOOKING: compose request as an email (book.html) ── */
   (function(){
     var form=document.getElementById('bookForm'); if(!form) return;
-    var EMAIL='aaryanpanchal270@gmail.com';
+    var EMAIL='aaryanpanchal@icloud.com';
 
     // Package buttons preselect a shoot type and jump to the form.
     document.querySelectorAll('[data-pick]').forEach(function(btn){

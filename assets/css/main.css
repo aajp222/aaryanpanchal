@@ -414,7 +414,7 @@ footer a:hover{color:var(--accent);}
 .svc-tags span{font-family:var(--mono);font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--line);border-radius:100px;padding:.3rem .6rem;}
 
 /* ── SELECTED FRAMES (gallery) ── */
-.frames{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:clamp(2.4rem,5vw,3.6rem);}
+.frames{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:clamp(150px,19vw,248px);gap:14px;margin-top:clamp(2.4rem,5vw,3.6rem);}
 .frame{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--bg-2);}
 .frame img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease);}
 .frame:hover img{transform:scale(1.05);}
@@ -425,7 +425,7 @@ footer a:hover{color:var(--accent);}
 .frame.tall{grid-column:span 2;grid-row:span 2;}
 .frame.wide{grid-column:span 4;}
 .frame.half{grid-column:span 2;}
-@media (max-width:880px){.frames{grid-template-columns:repeat(2,1fr)}.frame.tall,.frame.wide,.frame.half{grid-column:span 2;grid-row:auto}.frame.tall{aspect-ratio:4/5}.frame.wide,.frame.half{aspect-ratio:16/10}}
+@media (max-width:880px){.frames{grid-template-columns:repeat(2,1fr);grid-auto-rows:auto}.frame.tall,.frame.wide,.frame.half{grid-column:span 2;grid-row:auto}.frame.tall{aspect-ratio:4/5}.frame.wide,.frame.half{aspect-ratio:16/10}}
 
 /* ── PACKAGES ── */
 .pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:clamp(2.4rem,5vw,3.6rem);}
