@@ -98,7 +98,29 @@ line is the spine.
 
 ---
 
-## 6. What to confirm / replace
+## 6. The Playground & the secrets layer
+
+`/play.html` is the site's "after hours" page (violet `play` theme):
+generative flow-field hero (canvas, cursor-reactive, click bursts),
+**Beat Lab** (4×16 Web Audio step sequencer — synthesized kick/snare/hat/bass,
+no samples), an **arcade** (Drone Run, Reflex Lab), and the **Darkroom** —
+draggable, throwable, flippable polaroids of real photos.
+
+Hidden layer, discoverable from hints in the Playground dossier:
+- **Konami code** (any page) → warp flash → `/void.html`
+- **`void.html`** — a fake terminal (noindex): `help`, `whoami`, `snake`
+  (playable, text-mode), `matrix`, `theme`, `gompei`, etc.
+- The **footer full stop** on every page links to the void
+- **5 clicks on the homepage logo** → barrel roll (plus icon bursts)
+- A styled **console message** for devtools-openers
+
+All of it is dependency-free vanilla JS; games/sequencer suppress the
+sitewide cursor trail over their surfaces (`data-no-trail`) and everything
+respects `prefers-reduced-motion`.
+
+---
+
+## 7. What to confirm / replace
 
 - Award and stat wording (Demo Day placement, market size, dimensions, dose, 56%).
 - GitHub + resume links (optional, in Connect / nav).

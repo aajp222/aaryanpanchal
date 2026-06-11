@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>···</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#050505" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--ph:#7df97d;--ph-dim:#3f8f3f;--bg:#050505;}
+    [data-ph="amber"]{--ph:#ffb648;--ph-dim:#8f6a2c;}
+    [data-ph="cyan"]{--ph:#5fe8ff;--ph-dim:#33808f;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;}
+    body{background:var(--bg);color:var(--ph);font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;
+      font-size:clamp(.78rem,1.6vw,.95rem);line-height:1.6;overflow-x:hidden;
+      text-shadow:0 0 6px color-mix(in srgb,var(--ph) 55%,transparent);}
+    ::selection{background:var(--ph);color:#050505;text-shadow:none;}
+    .crt{min-height:100svh;padding:clamp(1.2rem,4vw,3rem);max-width:980px;margin-inline:auto;
+      display:flex;flex-direction:column;cursor:text;}
+    .scan{position:fixed;inset:0;pointer-events:none;z-index:5;mix-blend-mode:overlay;opacity:.5;
+      background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px);}
+    .vig{position:fixed;inset:0;pointer-events:none;z-index:4;
+      background:radial-gradient(110% 100% at 50% 50%,transparent 60%,rgba(0,0,0,.6));}
+    @keyframes flick{0%,100%{opacity:1}96%{opacity:1}97%{opacity:.86}98%{opacity:1}}
+    .crt{animation:flick 7s infinite;}
+    #out{white-space:pre-wrap;word-break:break-word;flex:0 0 auto;}
+    #out .dim{color:var(--ph-dim);}
+    #out .hi{color:#fff;text-shadow:0 0 8px rgba(255,255,255,.5);}
+    #out a{color:var(--ph);text-decoration:underline;}
+    #out .err{color:#ff6e6e;text-shadow:0 0 6px rgba(255,110,110,.5);}
+    .in-line{display:flex;align-items:baseline;gap:.6ch;}
+    .in-line .ps1{color:var(--ph-dim);white-space:nowrap;}
+    #mirror{white-space:pre;}
+    #cursor{display:inline-block;width:.62em;height:1.1em;background:var(--ph);
+      vertical-align:text-bottom;animation:blink 1.05s steps(1) infinite;}
+    @keyframes blink{50%{opacity:0;}}
+    #cmd{position:absolute;opacity:0;width:1px;height:1px;border:0;padding:0;}
+    pre.game{line-height:1.18;font-size:clamp(.72rem,2vw,1rem);margin:.6em 0;}
+    #matrix{position:fixed;inset:0;z-index:50;background:#000;display:block;}
+    @media (prefers-reduced-motion:reduce){.crt{animation:none;}#cursor{animation:none;}}
+  </style>
+</head>
+<body>
+  <div class="scan" aria-hidden="true"></div>
+  <div class="vig" aria-hidden="true"></div>
+  <main class="crt" id="crt">
+    <div id="out" aria-live="polite"></div>
+    <div class="in-line" id="inLine" hidden>
+      <span class="ps1">guest@panchal:~$</span><span id="mirror"></span><span id="cursor" aria-hidden="true"></span>
+    </div>
+    <input id="cmd" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+      aria-label="Terminal input" />
+  </main>
+
+  <script>
+  (function(){
+    'use strict';
+    var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+    var out = document.getElementById('out');
+    var inLine = document.getElementById('inLine');
+    var mirror = document.getElementById('mirror');
+    var cmd = document.getElementById('cmd');
+    var crt = document.getElementById('crt');
+    var history = [], hIdx = -1, busy = false, game = null;
+
+    function scrollEnd(){ window.scrollTo(0, document.body.scrollHeight); }
+    function line(txt, cls){
+      var d = document.createElement('div');
+      if (cls) d.className = cls;
+      d.textContent = txt === '' ? ' ' : txt;
+      out.appendChild(d); scrollEnd(); return d;
+    }
+    function html(markup){
+      var d = document.createElement('div');
+      d.innerHTML = markup; out.appendChild(d); scrollEnd(); return d;
+    }
+    function type(lines, done){
+      busy = true; inLine.hidden = true;
+      var li = 0;
+      (function nextLine(){
+        if (li >= lines.length){ busy = false; inLine.hidden = false; scrollEnd(); if (done) done(); return; }
+        var item = lines[li++], txt = item[0], cls = item[1];
+        if (reduce){ line(txt, cls); return nextLine(); }
+        var d = line('', cls), ci = 0;
+        (function tick(){
+          if (ci >= txt.length){ if (txt === '') d.textContent = ' '; return setTimeout(nextLine, 34); }
+          d.textContent = txt.slice(0, ++ci);
+          scrollEnd(); setTimeout(tick, 6);
+        })();
+      })();
+    }
+
+    var BANNER = [
+      '  ___  ___  _  _  ___  _  _   _   _',
+      ' | _ \\/ _ \\| \\| |/ __|| || | /_\\ | |',
+      ' |  _/ /_\\ \\ .` | (__ | __ |/ _ \\| |__',
+      ' |_| /_/ \\_\\_|\\_|\\___||_||_/_/ \\_\\____|'
+    ];
+    var FILES = {
+      'episafe.txt': ['EpiSafe — epinephrine that lives in your phone case.',
+        'Built for the 56% of people who don’t carry their auto-injector.',
+        '11.4mm thin · 0.3mg dose · patent pending · 510(k) pathway.',
+        'Full story: type `open episafe`'],
+      'sga.txt': ['WPI Student Government · Co-Marketing Chair.',
+        'Instagram, TikTok, the website, Club of the Week, Financial Fridays.',
+        'If you saw an SGA post, it probably came through me.'],
+      'drone.txt': ['DJI pilot. Golden-hour addict.',
+        'Aerials, events, sports, product. type `open book` to book a shoot.'],
+      'homework/': ['cat: homework/: is a directory (and it’s empty, don’t tell my professors)'],
+      'secret.txt': ['ok. you’re thorough. one more for you:', 'type `gompei`']
+    };
+    var CMDS; // populated below (needed for tab-complete + help)
+
+    function prompt(echoTxt){
+      var d = document.createElement('div');
+      d.innerHTML = '<span class="dim">guest@panchal:~$</span> ';
+      d.appendChild(document.createTextNode(echoTxt));
+      out.appendChild(d); scrollEnd();
+    }
+
+    function run(raw){
+      var input = raw.trim();
+      prompt(input);
+      if (!input) return;
+      history.push(input); hIdx = history.length;
+      var parts = input.split(/\s+/), c = parts[0].toLowerCase(), arg = parts.slice(1).join(' ');
+
+      switch(c){
+        case 'help':
+          line('the void responds to:', 'dim');
+          line('  help          this list');
+          line('  whoami        who built this');
+          line('  ls            look around');
+          line('  cat <file>    read a file');
+          line('  snake         play snake (arrows/wasd · q quits)');
+          line('  matrix        follow the white rabbit (any key exits)');
+          line('  theme         cycle phosphor: green → amber → cyan');
+          line('  email         copy my email');
+          line('  open <page>   home · episafe · play · book');
+          line('  clear · date · echo · pwd · exit');
+          line('  ...and a couple that aren’t listed.', 'dim');
+          break;
+        case 'whoami':
+          line('Aaryan Panchal.');
+          line('Mechanical engineer @ WPI. Founder of EpiSafe.');
+          line('Drone pilot, SGA marketing chair, Logic Pro resident,');
+          line('and — evidently — someone who hides terminals in his portfolio.');
+          break;
+        case 'ls':
+          line('episafe.txt   sga.txt   drone.txt   homework/   secret.txt', 'hi');
+          break;
+        case 'cat':
+          if (!arg) { line('cat: which file? try `ls`', 'err'); break; }
+          var key = arg.toLowerCase();
+          if (FILES[key]) FILES[key].forEach(function(l){ line(l); });
+          else line('cat: ' + arg + ': no such file', 'err');
+          break;
+        case 'snake': startSnake(); break;
+        case 'matrix': startMatrix(); break;
+        case 'theme':
+          var cur = document.documentElement.getAttribute('data-ph');
+          var next = cur === 'amber' ? 'cyan' : (cur === 'cyan' ? '' : 'amber');
+          if (next) document.documentElement.setAttribute('data-ph', next);
+          else document.documentElement.removeAttribute('data-ph');
+          line('phosphor: ' + (next || 'green'));
+          break;
+        case 'email':
+          if (navigator.clipboard && navigator.clipboard.writeText)
+            navigator.clipboard.writeText('aaryanpanchal@icloud.com').catch(function(){});
+          html('<a href="mailto:aaryanpanchal@icloud.com">aaryanpanchal@icloud.com</a> <span class="dim">— copied to clipboard</span>');
+          break;
+        case 'open':
+          var MAP = { home:'index.html', episafe:'episafe.html', play:'play.html', book:'book.html', playground:'play.html' };
+          if (MAP[arg.toLowerCase()]) { line('opening ' + arg + '…', 'dim'); location.href = MAP[arg.toLowerCase()]; }
+          else line('open: unknown page. try home · episafe · play · book', 'err');
+          break;
+        case 'clear': out.innerHTML = ''; break;
+        case 'date': line(new Date().toString()); break;
+        case 'echo': line(arg || ''); break;
+        case 'pwd': line('/home/guest/void'); break;
+        case 'sudo': line('you’re not root here. this is MY website.', 'err'); break;
+        case 'rm': line('absolutely not.', 'err'); break;
+        case 'konami': line('you’re already here, genius.', 'dim'); break;
+        case 'hello': case 'hi': case 'hey': line('hey. type `help` if you’re lost.'); break;
+        case 'aaryan': line('that’s me. or type `whoami` for the formal version.'); break;
+        case 'gompei':
+          line('   _  _', 'hi'); line('  (\\\\(\\\\   GOMPEI THE GOAT', 'hi');
+          line('   )  )   WPI’s finest. baaa.', 'hi'); line('  (__(__)', 'hi');
+          line('achievement unlocked: you found all of it. genuinely impressive.', 'dim');
+          break;
+        case 'exit': case 'logout': case 'quit':
+          line('returning to the surface…', 'dim');
+          setTimeout(function(){ location.href = 'index.html'; }, 500);
+          break;
+        default:
+          line('command not found: ' + c + ' — try `help`', 'err');
+      }
+    }
+    CMDS = ['help','whoami','ls','cat','snake','matrix','theme','email','open','clear','date','echo','pwd','exit','sudo','konami','gompei'];
+
+    /* ── input plumbing ── */
+    function focusCmd(){ if (!game) cmd.focus({ preventScroll: true }); }
+    crt.addEventListener('click', focusCmd);
+    cmd.addEventListener('input', function(){ mirror.textContent = cmd.value; });
+    cmd.addEventListener('keydown', function(e){
+      if (busy) { e.preventDefault(); return; }
+      if (e.key === 'Enter'){
+        var v = cmd.value; cmd.value = ''; mirror.textContent = '';
+        run(v);
+      } else if (e.key === 'ArrowUp'){
+        e.preventDefault();
+        if (hIdx > 0) { hIdx--; cmd.value = history[hIdx] || ''; mirror.textContent = cmd.value; }
+      } else if (e.key === 'ArrowDown'){
+        e.preventDefault();
+        if (hIdx < history.length) { hIdx++; cmd.value = history[hIdx] || ''; mirror.textContent = cmd.value; }
+      } else if (e.key === 'Tab'){
+        e.preventDefault();
+        var v2 = cmd.value.toLowerCase();
+        if (!v2) return;
+        var m = CMDS.filter(function(k){ return k.indexOf(v2) === 0; });
+        if (m.length === 1){ cmd.value = m[0] + ' '; mirror.textContent = cmd.value; }
+        else if (m.length > 1) line(m.join('   '), 'dim');
+      }
+    });
+
+    /* ── SNAKE (rendered as text in a <pre>) ── */
+    function startSnake(){
+      var COLS = 30, ROWS = 16;
+      var pre = document.createElement('pre'); pre.className = 'game';
+      out.appendChild(pre);
+      inLine.hidden = true; cmd.blur();
+      var snake = [[8,8],[7,8],[6,8]], dir = [1,0], nextDir = [1,0], food = null, score = 0, dead = false;
+      var best = parseInt(localStorage.getItem('ap_snakeBest') || '0', 10);
+      var tick = 135, timer = null;
+      function place(){
+        do { food = [Math.floor(Math.random()*COLS), Math.floor(Math.random()*ROWS)]; }
+        while (snake.some(function(s){ return s[0]===food[0] && s[1]===food[1]; }));
+      }
+      place();
+      function render(){
+        var g = [], y, x;
+        for (y = 0; y < ROWS; y++){ g.push(new Array(COLS).fill('·')); }
+        g[food[1]][food[0]] = '◆';
+        snake.forEach(function(s, i){ if (s[1]>=0 && s[1]<ROWS && s[0]>=0 && s[0]<COLS) g[s[1]][s[0]] = i===0 ? '▓' : '█'; });
+        var border = '┌' + '─'.repeat(COLS) + '┐';
+        var lines = [' SNAKE — score ' + score + '  best ' + Math.max(best, score) + '   [q] quit', border];
+        for (y = 0; y < ROWS; y++) lines.push('│' + g[y].join('') + '│');
+        lines.push('└' + '─'.repeat(COLS) + '┘');
+        pre.textContent = lines.join('\n');
+        scrollEnd();
+      }
+      function step(){
+        dir = nextDir;
+        var h = [snake[0][0] + dir[0], snake[0][1] + dir[1]];
+        if (h[0] < 0 || h[0] >= COLS || h[1] < 0 || h[1] >= ROWS ||
+            snake.some(function(s){ return s[0]===h[0] && s[1]===h[1]; })) return die();
+        snake.unshift(h);
+        if (h[0] === food[0] && h[1] === food[1]){
+          score++; place();
+          if (score % 4 === 0 && tick > 75){ tick -= 10; clearInterval(timer); timer = setInterval(step, tick); }
+        } else snake.pop();
+        render();
+      }
+      function die(){
+        dead = true; clearInterval(timer);
+        if (score > best){ best = score; localStorage.setItem('ap_snakeBest', '' + best); }
+        cleanup();
+        line('game over — ' + score + ' point' + (score===1?'':'s') + (score >= best && score > 0 ? ' · new best!' : ' · best: ' + best), 'hi');
+      }
+      function key(e){
+        var k = e.key.toLowerCase();
+        var D = { arrowup:[0,-1], w:[0,-1], arrowdown:[0,1], s:[0,1], arrowleft:[-1,0], a:[-1,0], arrowright:[1,0], d:[1,0] };
+        if (D[k]){
+          e.preventDefault();
+          var nd = D[k];
+          if (!(nd[0] === -dir[0] && nd[1] === -dir[1])) nextDir = nd;
+        } else if (k === 'q' || k === 'escape'){ e.preventDefault(); die(); }
+      }
+      // basic swipe support for phones
+      var tx = 0, ty = 0;
+      function tStart(e){ tx = e.touches[0].clientX; ty = e.touches[0].clientY; }
+      function tEnd(e){
+        var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+        if (Math.abs(dx) < 18 && Math.abs(dy) < 18) return;
+        var nd = Math.abs(dx) > Math.abs(dy) ? [dx > 0 ? 1 : -1, 0] : [0, dy > 0 ? 1 : -1];
+        if (!(nd[0] === -dir[0] && nd[1] === -dir[1])) nextDir = nd;
+      }
+      function cleanup(){
+        removeEventListener('keydown', key, true);
+        removeEventListener('touchstart', tStart); removeEventListener('touchend', tEnd);
+        game = null; inLine.hidden = false; focusCmd();
+      }
+      addEventListener('keydown', key, true);
+      addEventListener('touchstart', tStart, { passive: true });
+      addEventListener('touchend', tEnd, { passive: true });
+      game = 'snake';
+      render();
+      timer = setInterval(step, tick);
+    }
+
+    /* ── MATRIX RAIN ── */
+    function startMatrix(){
+      var cv = document.createElement('canvas'); cv.id = 'matrix';
+      document.body.appendChild(cv);
+      var ctx = cv.getContext('2d');
+      cv.width = innerWidth; cv.height = innerHeight;
+      var fs = 16, cols = Math.ceil(cv.width / fs), drops = [];
+      for (var i = 0; i < cols; i++) drops[i] = Math.random() * -50;
+      var CHARS = 'アカサタナハマヤラワ0123456789ABCDEF<>/=+*';
+      var ph = getComputedStyle(document.documentElement).getPropertyValue('--ph').trim() || '#7df97d';
+      game = 'matrix'; inLine.hidden = true; cmd.blur();
+      var alive = true;
+      function frame(){
+        if (!alive) return;
+        ctx.fillStyle = 'rgba(0,0,0,0.07)'; ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.font = fs + 'px monospace';
+        for (var i = 0; i < cols; i++){
+          var ch = CHARS[Math.floor(Math.random() * CHARS.length)];
+          ctx.fillStyle = Math.random() > 0.975 ? '#fff' : ph;
+          ctx.fillText(ch, i * fs, drops[i] * fs);
+          if (drops[i] * fs > cv.height && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+      function exit(e){
+        if (e) e.preventDefault();
+        alive = false; cv.remove();
+        removeEventListener('keydown', exit, true);
+        cv.removeEventListener('pointerdown', exit);
+        game = null; inLine.hidden = false;
+        line('back from the matrix.', 'dim'); focusCmd();
+      }
+      addEventListener('keydown', exit, true);
+      cv.addEventListener('pointerdown', exit);
+    }
+
+    /* ── boot ── */
+    var boot = BANNER.map(function(b){ return [b, 'hi']; }).concat([
+      ['', ''],
+      ['PANCHAL INDUSTRIES (UN)OFFICIAL TERMINAL — v2.6 "void"', 'dim'],
+      ['unauthorized access detected ... just kidding. welcome.', ''],
+      ['', ''],
+      ['you found the void. not many do.', ''],
+      ['type `help` to look around.', 'dim'],
+      ['', '']
+    ]);
+    type(boot, focusCmd);
+  })();
+  </script>
+</body>
+</html>
