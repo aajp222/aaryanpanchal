@@ -357,6 +357,7 @@
       var lastX=null,lastY=null,acc=0,GAP=72;
       addEventListener('mousemove',function(e){
         if(pre && pre.parentNode && !pre.classList.contains('done')) return;
+        if(document.body.classList.contains('trail-off')) return; // games/sequencer own the pointer there
         if(lastX!==null) acc+=Math.hypot(e.clientX-lastX,e.clientY-lastY);
         lastX=e.clientX; lastY=e.clientY;
         if(acc>=GAP){ acc=0; spawn(e.clientX+(Math.random()*12-6),e.clientY+(Math.random()*12-6),false); }
@@ -410,6 +411,49 @@
       var yv=scrollY; v+=(yv-last)*.3; last=yv;
       if(!raf) raf=requestAnimationFrame(tick);
     },{passive:true});
+  })();
+
+  /* ── SECRETS: konami warp, logo barrel roll, console note ── */
+  (function(){
+    // ↑ ↑ ↓ ↓ ← → ← → B A  →  the void
+    var SEQ=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+    var pos=0;
+    addEventListener('keydown',function(e){
+      pos = e.code===SEQ[pos] ? pos+1 : (e.code===SEQ[0] ? 1 : 0);
+      if(pos===SEQ.length){
+        pos=0;
+        document.body.classList.add('warp');
+        setTimeout(function(){ location.href='void.html'; }, reduce?0:620);
+      }
+    });
+
+    // the logo can take five hits
+    var logo=document.querySelector('.nav-logo'), taps=0, rolling=false;
+    if(logo && logo.getAttribute('href')==='#top'){
+      logo.addEventListener('click',function(){
+        taps++;
+        if(spawnIconBurst && !reduce){
+          var r=logo.getBoundingClientRect();
+          spawnIconBurst(r.left+r.width/2, r.top+r.height/2);
+        }
+        if(taps>=5 && !rolling && !reduce){
+          taps=0; rolling=true;
+          // pivot the roll on the current viewport center, not the page center
+          document.body.style.transformOrigin='50% '+(scrollY+innerHeight/2)+'px';
+          document.body.classList.add('roll');
+          setTimeout(function(){
+            document.body.classList.remove('roll');
+            document.body.style.transformOrigin='';
+            rolling=false;
+          },1450);
+        }
+      });
+    }
+
+    try{
+      console.log('%c▲ hello, curious one.','color:#f08a20;font-size:18px;font-weight:bold;');
+      console.log('%cCuriosity gets rewarded around here.\nTry the old code on your keyboard: ↑ ↑ ↓ ↓ ← → ← → B A\n(or visit /void.html directly — but where’s the fun in that?)','color:#a3a2a8;font-size:12px;line-height:1.7;');
+    }catch(err){}
   })();
 
   /* ── YEAR ── */

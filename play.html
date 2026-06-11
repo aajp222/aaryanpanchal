@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Playground · Aaryan Panchal</title>
+  <meta name="description" content="Aaryan Panchal's playground — generative art, a browser drum machine, arcade games, throwable photos, and a few secrets. Nothing here is professional. That's the point." />
+  <meta name="author" content="Aaryan Panchal" />
+  <meta name="theme-color" content="#0a0810" />
+  <link rel="canonical" href="https://aaryanpanchal.com/play.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aaryanpanchal.com/play.html" />
+  <meta property="og:title" content="The Playground · Aaryan Panchal" />
+  <meta property="og:description" content="Generative art, a drum machine, games, and at least four secrets." />
+  <meta property="og:image" content="https://aaryanpanchal.com/assets/img/aerial-tower.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Playground · Aaryan Panchal" />
+  <meta name="twitter:description" content="Generative art, a drum machine, games, and at least four secrets." />
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/img/mark-white.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/play.css" />
+
+  <!-- Pre-paint: enable JS hooks + set background FX defaults (no flash) -->
+  <script>
+    (function(){
+      var r=document.documentElement;
+      r.classList.remove('no-js'); r.classList.add('js');
+      r.setAttribute('data-bg','mesh'); r.setAttribute('data-grain','on');
+      r.setAttribute('data-vignette','on'); r.setAttribute('data-fx-motion','on');
+      r.setAttribute('data-theme','play');
+      r.style.setProperty('--fx-intensity','0.5'); r.style.setProperty('--fx-speed','30s');
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ── BACKGROUND FX ── -->
+  <div class="bg-fx" aria-hidden="true">
+    <div class="fx fx-aurora"></div><div class="fx fx-mesh"></div><div class="fx fx-grid"></div>
+    <div class="fx fx-spotlight"></div><div class="fx-grain"></div><div class="fx-vignette"></div>
+  </div>
+
+  <!-- ── OVERLAYS ── -->
+  <div id="progress" class="fixed-layer" aria-hidden="true"><span></span></div>
+  <div id="cur-dot" class="fixed-layer" aria-hidden="true"></div>
+  <div id="cur-ring" class="fixed-layer" aria-hidden="true"><span class="cur-txt">Play</span></div>
+
+  <aside id="rail" class="fixed-layer" aria-label="Section navigation">
+    <a href="#top"><span class="lbl">Top</span><span class="dash"></span></a>
+    <a href="#beatlab"><span class="lbl">Beat Lab</span><span class="dash"></span></a>
+    <a href="#arcade"><span class="lbl">Arcade</span><span class="dash"></span></a>
+    <a href="#darkroom"><span class="lbl">Darkroom</span><span class="dash"></span></a>
+    <a href="#secrets"><span class="lbl">Secrets</span><span class="dash"></span></a>
+  </aside>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="index.html#top" class="nav-logo" aria-label="Aaryan Panchal — home">
+      <img class="glyph" src="assets/img/mark-white.png" alt="" aria-hidden="true" />
+    </a>
+    <div class="nav-right">
+      <a href="index.html" class="pill"><span class="dot" aria-hidden="true"></span> <span class="pill-label">The serious site</span></a>
+      <a href="book.html" class="pill secondary">Photography</a>
+      <a href="index.html#connect" class="pill secondary">Get in touch</a>
+    </div>
+  </nav>
+
+  <!-- ── HERO: generative field ── -->
+  <header class="play-hero" id="top">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <p class="hero-eyebrow">Aaryan Panchal · After Hours</p>
+    <h1 class="play-title split-words">The <em>Playground</em></h1>
+    <p class="play-sub">Generative art, a drum machine, arcade games, throwable photos, and
+      <b>at least four secrets.</b> Nothing on this page is professional. That's the point.</p>
+    <div class="play-hint"><span class="blip" aria-hidden="true"></span> Move your cursor · Click to detonate</div>
+    <div class="scroll-cue"><span>Scroll</span><span class="bar" aria-hidden="true"></span></div>
+  </header>
+
+  <!-- ── MARQUEE ── -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Make</span><span>Break</span><span>Play</span><span>Repeat</span><span>No Deadlines</span><span>No Clients</span><span>Just Vibes</span>
+      <span>Make</span><span>Break</span><span>Play</span><span>Repeat</span><span>No Deadlines</span><span>No Clients</span><span>Just Vibes</span>
+    </div>
+  </div>
+
+  <!-- ── 01 BEAT LAB ── -->
+  <section class="block wrap" id="beatlab">
+    <p class="eyebrow reveal">Exhibit 01 · Beat Lab</p>
+    <h2 class="h2 split-words">I live in Logic Pro.<br>This is the <em>8-bit</em> version.</h2>
+    <p class="lead reveal">A four-track step sequencer, synthesized live in your browser — no samples,
+      just oscillators and noise. Tap the grid, hit play, make it slap.</p>
+
+    <div class="seq reveal" id="seq" data-no-trail>
+      <div class="seq-top">
+        <button class="seq-play" type="button" aria-label="Play / stop">
+          <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+          <svg class="ic-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
+        </button>
+        <label class="seq-bpm">Tempo
+          <input type="range" id="bpm" min="70" max="160" value="92" step="1" />
+          <output id="bpmOut">92 BPM</output>
+        </label>
+        <div class="seq-presets" role="group" aria-label="Patterns">
+          <button type="button" data-preset="boombap">Boom bap</button>
+          <button type="button" data-preset="house">House</button>
+          <button type="button" data-preset="clear">Clear</button>
+        </div>
+      </div>
+      <canvas class="seq-scope" aria-hidden="true"></canvas>
+      <div class="seq-rows"></div>
+    </div>
+    <p class="exhibit-note reveal">* Best with sound on. Obviously.</p>
+  </section>
+
+  <!-- ── 02 ARCADE ── -->
+  <section class="block proof" id="arcade">
+    <div class="wrap">
+      <p class="eyebrow reveal">Exhibit 02 · The Arcade</p>
+      <h2 class="h2 split-words">Games with zero<br><em>educational</em> value.</h2>
+
+      <div class="arcade-grid">
+        <!-- Drone Run -->
+        <div class="game-card reveal" data-no-trail>
+          <div class="game-head"><b>DRONE RUN</b><span class="keys">Tap / Space to fly</span></div>
+          <div class="game-zone">
+            <canvas id="droneCanvas"></canvas>
+            <div class="game-overlay" id="droneOverlay">
+              <div class="go-big">Fly the drone.</div>
+              <div class="go-sub">Tap or press space · don't hit the towers</div>
+            </div>
+          </div>
+          <div class="game-stats">
+            <span>Score · <b id="droneScore">0</b></span>
+            <span>Best · <b id="droneBest">0</b></span>
+            <span>Pilot · you</span>
+          </div>
+        </div>
+
+        <!-- Reflex Lab -->
+        <div class="game-card reflex reveal" data-no-trail>
+          <div class="game-head"><b>REFLEX LAB</b><span class="keys">Click when it lights up</span></div>
+          <div id="reflexZone">
+            <div class="rx-state">Ready</div>
+            <div class="rx-big">Test your reflexes.</div>
+            <div class="rx-note">Click to arm. Then click again the instant the panel lights up.</div>
+          </div>
+          <div class="game-stats">
+            <span>Best · <b id="reflexBest">—</b></span>
+            <span>Avg (5) · <b id="reflexAvg">—</b></span>
+          </div>
+        </div>
+
+        <!-- Locked third game -->
+        <div class="game-card locked reveal">
+          <div class="q" aria-hidden="true">?</div>
+          <div class="txt">
+            <b>There's a third game.</b>
+            <span>It isn't on this page — it lives somewhere darker. Old gamers know the code:
+            <code>↑ ↑ ↓ ↓ ← → ← → B A</code>. Or hunt for the loose full stop in the footer.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 03 DARKROOM ── -->
+  <section class="block wrap" id="darkroom">
+    <p class="eyebrow reveal">Exhibit 03 · The Darkroom</p>
+    <h2 class="h2 split-words">Shots that didn't make<br>the <em>homepage.</em></h2>
+    <div class="wall-bar reveal">
+      <span class="wall-tip">Drag them · throw them · click one to flip it over</span>
+      <button class="wall-shuffle" id="wallShuffle" type="button">↺ Re-scatter</button>
+    </div>
+    <div id="wall" data-no-trail aria-label="Draggable photo wall"></div>
+  </section>
+
+  <!-- ── 04 SECRETS ── -->
+  <section class="block proof" id="secrets">
+    <div class="wrap">
+      <p class="eyebrow reveal">Exhibit 04 · Classified</p>
+      <h2 class="h2 split-words">This site keeps <em>secrets.</em></h2>
+      <p class="lead reveal">Four of them, hidden in plain sight. Hover (or tap) a file to de-classify the hint.</p>
+
+      <div class="dossier">
+        <div class="dos reveal"><span class="dos-stamp">Top secret</span><div class="n">File 01 — The Code</div>
+          <p>Thirty years of gamers memorized the same ten keystrokes. <span class="redact">Type the Konami code anywhere on this site</span> and see where it takes you.</p></div>
+        <div class="dos reveal"><span class="dos-stamp">Top secret</span><div class="n">File 02 — The Full Stop</div>
+          <p>Somewhere in the footer of every page, <span class="redact">one little period is actually a door</span>. Punctuation has never been this load-bearing.</p></div>
+        <div class="dos reveal"><span class="dos-stamp">Top secret</span><div class="n">File 03 — The Logo</div>
+          <p>The mark in the top-left corner of the homepage can take a punch. <span class="redact">Five clicks and the whole site does a barrel roll</span>.</p></div>
+        <div class="dos reveal"><span class="dos-stamp">Top secret</span><div class="n">File 04 — The Console</div>
+          <p>Engineers read consoles. <span class="redact">Open developer tools and check what's logged</span> — there's a note in there for you.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONNECT ── -->
+  <section class="block wrap connect" id="connect">
+    <p class="eyebrow reveal" style="justify-content:center">Transmission ends</p>
+    <h2 class="connect-title split-words">Built something <em>fun</em> lately?</h2>
+    <p class="lead reveal" style="margin-inline:auto;text-align:center">Show me. Weird side projects get priority in my inbox.</p>
+    <a href="mailto:aaryanpanchal@icloud.com" class="connect-email reveal magnetic">aaryanpanchal@icloud.com <span aria-hidden="true">→</span></a>
+    <div class="socials reveal">
+      <a href="index.html">Portfolio →</a>
+      <a href="book.html">Photography →</a>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </section>
+
+  <!-- ── BIG FOOTER WORDMARK ── -->
+  <div class="bigfoot" aria-hidden="true"><div class="bigfoot-word">Play</div></div>
+  <footer>
+    <span>© <span id="year">2026</span> Aaryan Panchal</span>
+    <span class="status"><span class="d"></span> Currently procrastinating productively</span>
+    <span>4 secrets remain<a href="void.html" class="secret-dot" aria-label="?">.</a></span>
+  </footer>
+
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/play.js" defer></script>
+</body>
+</html>
