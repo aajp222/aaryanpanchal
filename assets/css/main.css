@@ -35,6 +35,7 @@
 :root{--glow:rgba(240,138,32,.16);}
 :root[data-theme="sga"]{--accent:#d12a40;--glow:rgba(209,42,64,.22);--bg:#0c0708;--bg-1:#130a0b;--bg-2:#180d0f;}
 :root[data-theme="neutral"]{--accent:#bdb9b1;--glow:rgba(255,255,255,.05);--bg:#0a0a0b;}
+:root[data-theme="play"]{--accent:#9b5cff;--glow:rgba(155,92,255,.22);--bg:#0a0810;--bg-1:#110d1a;--bg-2:#161021;}
 :root{transition:--accent .7s var(--ease),--glow .7s var(--ease);}
 
 /* ── BASE ── */
@@ -126,6 +127,32 @@ header,section,.marquee,.bigfoot,footer{position:relative;z-index:1;}
   body.cur-view .cur-txt{opacity:1;}
 }
 
+/* ── APP-ICON CURSOR TRAIL ── */
+#icon-trail{position:fixed;inset:0;z-index:9550;pointer-events:none;overflow:hidden;}
+.cur-icon{position:absolute;width:clamp(34px,3.4vw,44px);aspect-ratio:1;border-radius:22%;
+  background-size:cover;background-repeat:no-repeat;
+  box-shadow:0 10px 28px rgba(0,0,0,.45);
+  transform:translate(-50%,-50%);will-change:transform,opacity;
+  animation:iconTrail 1.15s cubic-bezier(.18,.7,.3,1) forwards;}
+.cur-icon.burst{animation:iconBurst .95s cubic-bezier(.16,.8,.32,1) forwards;}
+@keyframes iconTrail{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(var(--r0,0deg));}
+  18%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(var(--r0,0deg));}
+  100%{opacity:0;transform:translate(calc(-50% + var(--tx,0px)),calc(-50% + var(--ty,46px))) scale(.55) rotate(var(--r1,0deg));}
+}
+@keyframes iconBurst{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(.3) rotate(var(--r0,0deg));}
+  100%{opacity:0;transform:translate(calc(-50% + var(--tx,0px)),calc(-50% + var(--ty,0px))) scale(1) rotate(var(--r1,0deg));}
+}
+
+/* ── COPY-EMAIL TOAST ── */
+.copy-toast{position:fixed;z-index:9650;transform:translate(-50%,-150%);pointer-events:none;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
+  background:var(--accent);color:#0a0a0b;padding:.5rem .85rem;border-radius:100px;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+  animation:toastUp 1.6s var(--ease) forwards;}
+@keyframes toastUp{0%{opacity:0;translate:0 8px}12%{opacity:1;translate:0 0}78%{opacity:1;translate:0 0}100%{opacity:0;translate:0 -12px}}
+
 /* ── SECTION INDEX RAIL ── */
 #rail{position:fixed;right:clamp(.8rem,2vw,1.6rem);top:50%;transform:translateY(-50%);z-index:55;
   display:flex;flex-direction:column;gap:14px;align-items:flex-end;}
@@ -180,8 +207,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:cent
   .nav-right{gap:.4rem;}
   .pill{padding:.5rem .85rem;font-size:.7rem;gap:.42rem;}
   .pill .dot{width:6px;height:6px;}
-  /* drop only the 3rd pill (e.g. "Get in touch") so two still fit a phone */
-  .nav-right .pill.secondary:nth-of-type(3){display:none;}
+  /* drop the later secondary pills so two always fit a phone */
+  .nav-right .pill.secondary:nth-of-type(n+3){display:none;}
 }
 @media (max-width:360px){
   .pill{padding:.46rem .72rem;font-size:.66rem;}
@@ -306,7 +333,27 @@ section.block{padding-block:clamp(5rem,11vh,9rem);position:relative;}
 .bigfoot{overflow:hidden;border-top:1px solid var(--line);padding-top:clamp(3rem,6vw,5rem);}
 .bigfoot-word{font-weight:800;letter-spacing:-.045em;line-height:.8;font-size:clamp(4rem,20vw,18rem);text-align:center;white-space:nowrap;color:var(--bg-2);
   background:linear-gradient(180deg,#26262b,#101012);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.bigfoot.bf-live{cursor:pointer;}
+.bf-live .bigfoot-word{transition:opacity .3s var(--ease);}
+.bf-live:hover .bigfoot-word{
+  background:radial-gradient(34% 170% at var(--mx,50%) 60%, var(--accent) 0%, #2c2c33 55%, #101012 100%);
+  -webkit-background-clip:text;background-clip:text;}
+.bf-hint{position:absolute;left:50%;top:clamp(.8rem,2vw,1.6rem);transform:translateX(-50%) translateY(6px);
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);
+  opacity:0;transition:opacity .35s var(--ease),transform .35s var(--ease);pointer-events:none;}
+.bf-live{position:relative;}
+.bf-live:hover .bf-hint{opacity:1;transform:translateX(-50%) translateY(0);}
 footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;padding:2rem var(--gutter);font-family:var(--mono);font-size:.76rem;color:var(--ink-3);letter-spacing:.03em;}
+/* the not-so-innocent full stop */
+footer .secret-dot{display:inline-block;padding:0 .45em;color:var(--ink-3);transition:color .3s,text-shadow .3s;}
+footer .secret-dot:hover,footer .secret-dot:focus-visible{color:var(--accent);text-shadow:0 0 12px var(--accent);}
+
+/* ── EASTER EGGS: konami warp + logo barrel roll ── */
+body.warp::after{content:"";position:fixed;inset:0;z-index:9800;background:var(--accent);
+  mix-blend-mode:screen;animation:warpFlash .65s ease-in forwards;pointer-events:none;}
+@keyframes warpFlash{0%{opacity:0;transform:scale(.2);border-radius:50%}55%{opacity:1;transform:scale(1.1);border-radius:0}100%{opacity:1;transform:scale(1)}}
+body.roll{animation:barrelRoll 1.4s var(--ease);}
+@keyframes barrelRoll{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 footer a:hover{color:var(--accent);}
 .status{display:inline-flex;align-items:center;gap:.5rem;}
 .status .d{width:7px;height:7px;border-radius:50%;background:var(--accent);}
@@ -527,4 +574,6 @@ footer a:hover{color:var(--accent);}
   .media img{transform:none!important;}
   .tilt{transform:none!important;}
   #preloader{display:none!important;}
+  .cur-icon{display:none!important;}
+  .marquee{transform:none!important;}
 }
