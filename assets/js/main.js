@@ -218,20 +218,37 @@
   /* ── BOOKING: scroll-driven cinematic reel (book.html) ── */
   (function(){
     var reel=document.getElementById('reel'); if(!reel) return;
+    var canvas=document.getElementById('reelCanvas');
     var play=reel.querySelector('.reel-play');
     var time=reel.querySelector('.reel-time');
-    var vid=reel.querySelector('video');
     function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
-    if(reduce){ reel.style.setProperty('--p','1'); return; }
 
-    // If a real video source is wired up, let it autoplay as ambient footage.
-    if(vid && vid.querySelector('source')){
-      vid.muted=true;
-      var io=new IntersectionObserver(function(es){ es.forEach(function(en){
-        if(en.isIntersecting){ vid.play().catch(function(){}); } else { vid.pause(); }
-      }); }, {threshold:.15});
-      io.observe(reel);
+    // Preloaded image sequence painted to a <canvas>. Scrubbing this way has
+    // zero seek/decode latency (unlike video.currentTime), so the footage
+    // advances perfectly smoothly with scroll position.
+    var FRAMES=50;
+    var ctx=(canvas&&canvas.getContext)?canvas.getContext('2d'):null;
+    var imgs=new Array(FRAMES), ready=new Array(FRAMES), drawn=-1, target=0;
+    function src(i){ return 'assets/reel/f_'+(''+(i+1)).padStart(3,'0')+'.webp'; }
+    function draw(i){
+      if(!ctx) return;
+      if(!ready[i]){ // not loaded yet — paint the nearest frame we do have
+        var j=i; while(j>=0&&!ready[j]) j--;
+        if(j<0){ j=i; while(j<FRAMES&&!ready[j]) j++; }
+        if(j<0||j>=FRAMES||!ready[j]) return; i=j;
+      }
+      if(i===drawn) return; drawn=i;
+      ctx.drawImage(imgs[i],0,0,canvas.width,canvas.height);
     }
+    if(ctx){
+      for(var k=0;k<FRAMES;k++){ (function(k){
+        var im=new Image(); im.decoding='async';
+        im.onload=function(){ ready[k]=true; if(drawn===-1||k===target) draw(target); };
+        im.src=src(k); imgs[k]=im;
+      })(k); }
+    }
+
+    if(reduce){ reel.style.setProperty('--p','1'); return; }
 
     var ticking=false;
     function update(){
@@ -240,7 +257,9 @@
       var p=total>0 ? clamp(-reel.getBoundingClientRect().top/total,0,1) : 0;
       reel.style.setProperty('--p',p.toFixed(4));
       if(play) play.style.opacity=Math.max(0,1-p*2.4);
-      if(time){ var t=Math.round(p*100); time.textContent='00:'+(t<10?'0'+t:t); }
+      if(time){ var t=Math.round(p*10); time.textContent='00:'+(t<10?'0'+t:t); }
+      target=Math.round(p*(FRAMES-1));
+      draw(target);
     }
     function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
     addEventListener('scroll',onScroll,{passive:true});
@@ -251,7 +270,7 @@
   /* ── BOOKING: compose request as an email (book.html) ── */
   (function(){
     var form=document.getElementById('bookForm'); if(!form) return;
-    var EMAIL='aaryanpanchal270@gmail.com';
+    var EMAIL='aaryanpanchal@icloud.com';
 
     // Package buttons preselect a shoot type and jump to the form.
     document.querySelectorAll('[data-pick]').forEach(function(btn){
@@ -284,6 +303,113 @@
       window.location.href='mailto:'+EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
       form.classList.add('sent');
     });
+  })();
+
+  /* ── APP-ICON CURSOR TRAIL ──
+     Icons of the tools/games Aaryan actually uses (Logic, Final Cut,
+     Premiere, Photoshop, After Effects, Lightroom, Minecraft, games)
+     spawn along the cursor path, pop in, drift and fade. */
+  var spawnIconBurst=null;
+  (function(){
+    var SVGS=[
+      // Logic Pro — waveform
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#1c1c1f"/><g stroke="#f6a83c" stroke-width="4.5" stroke-linecap="round" fill="none"><path d="M13 27v10"/><path d="M22.5 19v26"/><path d="M32 13v38"/><path d="M41.5 21v22"/><path d="M51 27v10"/></g></svg>',
+      // Final Cut Pro — gradient star
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9b5cff"/><stop offset="1" stop-color="#ff4fa3"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="#141417"/><path d="M32 9c2.6 12 11 20.4 23 23-12 2.6-20.4 11-23 23-2.6-12-11-20.4-23-23 12-2.6 20.4-11 23-23z" fill="url(#g)"/></svg>',
+      // Premiere Pro
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#00005b"/><text x="32" y="42" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#9999ff">Pr</text></svg>',
+      // Photoshop
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#001e36"/><text x="32" y="42" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#31a8ff">Ps</text></svg>',
+      // After Effects
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#1f0040"/><text x="32" y="42" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#d291ff">Ae</text></svg>',
+      // Lightroom
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#001e36"/><text x="32" y="42" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#31a8ff">Lr</text></svg>',
+      // Minecraft — grass block
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><clipPath id="c"><rect width="64" height="64" rx="14"/></clipPath></defs><g clip-path="url(#c)"><rect width="64" height="64" fill="#7a5535"/><rect x="6" y="34" width="7" height="7" fill="#6b4830"/><rect x="30" y="44" width="7" height="7" fill="#8a6442"/><rect x="48" y="30" width="7" height="7" fill="#6b4830"/><rect x="16" y="52" width="7" height="7" fill="#8a6442"/><rect x="44" y="52" width="7" height="7" fill="#6b4830"/><rect width="64" height="16" fill="#7cb84a"/><rect x="0" y="16" width="10" height="6" fill="#7cb84a"/><rect x="18" y="16" width="8" height="8" fill="#7cb84a"/><rect x="34" y="16" width="12" height="5" fill="#7cb84a"/><rect x="54" y="16" width="10" height="7" fill="#7cb84a"/><rect x="4" y="3" width="8" height="6" fill="#94d65e"/><rect x="40" y="6" width="9" height="6" fill="#94d65e"/><rect x="24" y="2" width="7" height="5" fill="#6aa33f"/></g></svg>',
+      // Games — controller
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#17171b"/><path d="M22 21h20c8 0 13.5 6.4 13.5 14 0 6.6-4.3 11.5-10.4 11.5-4.3 0-6.8-2.4-9-5.5H27.9c-2.2 3.1-4.7 5.5-9 5.5C12.8 46.5 8.5 41.6 8.5 35c0-7.6 5.5-14 13.5-14z" fill="#e9e8ef"/><rect x="16" y="32" width="13" height="4.4" rx="1.4" fill="#17171b"/><rect x="20.3" y="27.7" width="4.4" height="13" rx="1.4" fill="#17171b"/><circle cx="42.5" cy="30.5" r="2.8" fill="#f08a20"/><circle cx="48.5" cy="36.5" r="2.8" fill="#d12a40"/></svg>'
+    ];
+    var urls=SVGS.map(function(s){ return 'url("data:image/svg+xml,'+encodeURIComponent(s)+'")'; });
+    var layer=document.createElement('div');
+    layer.id='icon-trail'; layer.setAttribute('aria-hidden','true');
+    document.body.appendChild(layer);
+
+    var idx=0, live=0, MAX=26;
+    function spawn(x,y,burst,ang,dist){
+      if(!burst && live>=MAX) return;
+      var el=document.createElement('div'); el.className='cur-icon'+(burst?' burst':'');
+      el.style.backgroundImage=urls[idx++ % urls.length];
+      el.style.left=x+'px'; el.style.top=y+'px';
+      var r0=Math.random()*30-15, r1=r0+(Math.random()*50-25);
+      var tx=Math.random()*44-22, ty=34+Math.random()*40;
+      if(burst){ tx=Math.cos(ang)*dist; ty=Math.sin(ang)*dist; r1=r0+(Math.random()*160-80); }
+      el.style.setProperty('--r0',r0+'deg'); el.style.setProperty('--r1',r1+'deg');
+      el.style.setProperty('--tx',tx+'px'); el.style.setProperty('--ty',ty+'px');
+      live++;
+      el.addEventListener('animationend',function(){ live--; el.remove(); });
+      layer.appendChild(el);
+    }
+    spawnIconBurst=function(x,y){
+      var n=12;
+      for(var i=0;i<n;i++) spawn(x,y,true,(Math.PI*2*i)/n+Math.random()*.5,70+Math.random()*90);
+    };
+    if(fine && !reduce){
+      var lastX=null,lastY=null,acc=0,GAP=72;
+      addEventListener('mousemove',function(e){
+        if(pre && pre.parentNode && !pre.classList.contains('done')) return;
+        if(lastX!==null) acc+=Math.hypot(e.clientX-lastX,e.clientY-lastY);
+        lastX=e.clientX; lastY=e.clientY;
+        if(acc>=GAP){ acc=0; spawn(e.clientX+(Math.random()*12-6),e.clientY+(Math.random()*12-6),false); }
+      },{passive:true});
+    }
+  })();
+
+  /* ── EMAIL: copy to clipboard + icon burst on click ── */
+  (function(){
+    document.querySelectorAll('a[href^="mailto:"]').forEach(function(a){
+      a.addEventListener('click',function(e){
+        var em=a.getAttribute('href').replace(/^mailto:/,'').split('?')[0];
+        if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(em).catch(function(){});
+        if(spawnIconBurst && !reduce) spawnIconBurst(e.clientX,e.clientY);
+        var t=document.createElement('div'); t.className='copy-toast'; t.textContent='Email copied ✓';
+        t.style.left=e.clientX+'px'; t.style.top=e.clientY+'px';
+        document.body.appendChild(t);
+        setTimeout(function(){ t.remove(); },1700);
+      });
+    });
+  })();
+
+  /* ── BIG FOOTER WORDMARK: cursor-lit, scrolls back to top ── */
+  (function(){
+    var bf=document.querySelector('.bigfoot'); if(!bf) return;
+    var word=bf.querySelector('.bigfoot-word'); if(!word) return;
+    bf.classList.add('bf-live');
+    bf.addEventListener('click',function(){ scrollTo({top:0,behavior:reduce?'auto':'smooth'}); });
+    if(fine && !reduce){
+      var hint=document.createElement('div'); hint.className='bf-hint'; hint.textContent='↑ Back to top'; bf.appendChild(hint);
+      bf.addEventListener('mousemove',function(e){
+        var r=word.getBoundingClientRect();
+        word.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(2)+'%');
+      });
+      bf.addEventListener('mouseenter',function(){ document.body.classList.add('cur-link'); });
+      bf.addEventListener('mouseleave',function(){ document.body.classList.remove('cur-link'); });
+    }
+  })();
+
+  /* ── MARQUEE: skews with scroll velocity ── */
+  (function(){
+    var track=document.querySelector('.marquee-track'); if(!track||reduce) return;
+    var mq=track.parentElement, last=scrollY, v=0, cur=0, raf=null;
+    function tick(){
+      cur+=(v-cur)*.12; v*=.86;
+      var s=Math.max(-8,Math.min(8,cur*.4));
+      if(Math.abs(cur)>.05||Math.abs(v)>.05){ mq.style.transform='skewX('+s.toFixed(3)+'deg)'; raf=requestAnimationFrame(tick); }
+      else { mq.style.transform=''; raf=null; }
+    }
+    addEventListener('scroll',function(){
+      var yv=scrollY; v+=(yv-last)*.3; last=yv;
+      if(!raf) raf=requestAnimationFrame(tick);
+    },{passive:true});
   })();
 
   /* ── YEAR ── */

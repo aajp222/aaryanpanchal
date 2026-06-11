@@ -14,13 +14,14 @@
   <meta property="og:url" content="https://aaryanpanchal.com/book.html" />
   <meta property="og:title" content="Book a Shoot — Drone &amp; Photography · Aaryan Panchal" />
   <meta property="og:description" content="Aerial drone cinematography and on-the-ground photography. Events, sports, real estate, product. Book a shoot." />
-  <meta property="og:image" content="https://aaryanpanchal.com/assets/img/aerial-hero.jpg" />
+  <meta property="og:image" content="https://aaryanpanchal.com/assets/img/reel-poster.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Book a Shoot — Aaryan Panchal" />
   <meta name="twitter:description" content="Drone &amp; photography work. Book a shoot." />
-  <meta name="twitter:image" content="https://aaryanpanchal.com/assets/img/aerial-hero.jpg" />
+  <meta name="twitter:image" content="https://aaryanpanchal.com/assets/img/reel-poster.jpg" />
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='24'%20fill='%23070a0e'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='15'%20fill='none'%20stroke='%235bb0ff'%20stroke-width='6'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='4'%20fill='%235bb0ff'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/img/mark-white.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,7 +44,7 @@
     "@context":"https://schema.org","@type":"Service",
     "name":"Aaryan Panchal — Drone & Photography",
     "serviceType":"Aerial drone cinematography and photography",
-    "provider":{"@type":"Person","name":"Aaryan Panchal","email":"mailto:aaryanpanchal270@gmail.com"},
+    "provider":{"@type":"Person","name":"Aaryan Panchal","email":"mailto:aaryanpanchal@icloud.com"},
     "areaServed":"Worcester, MA & New England",
     "url":"https://aaryanpanchal.com/book.html"
   }
@@ -75,7 +76,6 @@
   <nav>
     <a href="index.html#top" class="nav-logo" aria-label="Aaryan Panchal — home">
       <img class="glyph" src="assets/img/mark-white.png" alt="" aria-hidden="true" />
-      <span>Aaryan&nbsp;Panchal</span>
     </a>
     <div class="nav-right">
       <a href="#booking" class="pill"><span class="dot" aria-hidden="true"></span> <span class="pill-label">Book a shoot</span></a>
@@ -86,7 +86,7 @@
   <!-- ── HERO ── -->
   <header class="bk-hero" id="top">
     <div class="bk-hero-media" aria-hidden="true">
-      <img src="assets/img/aerial-hero.jpg" alt="" fetchpriority="high" />
+      <img src="assets/img/aerial-tower.jpg" alt="" fetchpriority="high" />
     </div>
     <p class="bk-eyebrow reveal">Drone · Photo · Video</p>
     <h1 class="bk-title split-words">Book the<br><em>shot.</em></h1>
@@ -104,20 +104,18 @@
   <section class="reel" id="reel" aria-label="Aerial reel">
     <div class="reel-sticky">
       <div class="reel-frame" data-cursor="view">
-        <!-- Drop a real reel in here to make it play:
-             <video class="reel-media" muted loop playsinline preload="none" poster="assets/img/aerial-hero.jpg">
-               <source src="assets/video/reel.mp4" type="video/mp4">
-             </video>
-             Until then, the aerial frame below stands in. -->
-        <img class="reel-media" src="assets/img/aerial-hero.jpg" alt="Aaryan operating a camera rig above Horr Field at WPI" />
+        <canvas class="reel-media" id="reelCanvas" width="1152" height="648"
+                role="img" aria-label="Aerial drone footage over New England fall foliage"
+                style="background:#06080c url('assets/img/reel-poster.jpg') center/cover no-repeat"></canvas>
+        <noscript><img class="reel-media" src="assets/img/reel-poster.jpg" alt="Aerial drone shot over New England fall foliage" /></noscript>
         <div class="reel-bar top" aria-hidden="true"></div>
         <div class="reel-bar bot" aria-hidden="true"></div>
         <div class="reel-tag"><span class="rec" aria-hidden="true"></span> Reel ’26 · 4K</div>
         <div class="reel-time" aria-hidden="true">00:00</div>
         <div class="reel-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         <div class="reel-cap">
-          <span class="kk">On location · WPI</span>
-          <span class="tt">Above the field, in the moment.</span>
+          <span class="kk">Aerial · New England</span>
+          <span class="tt">Scroll to fly the shot.</span>
         </div>
       </div>
     </div>
@@ -154,8 +152,16 @@
     </div>
     <div class="frames">
       <figure class="frame tall tilt reveal" data-cursor="view">
-        <img loading="lazy" decoding="async" src="assets/img/aerial-hero.jpg" alt="Aerial camera rig set up above a sports field at WPI" />
-        <figcaption class="meta"><b>Above Horr Field</b><span>Aerial · WPI</span></figcaption>
+        <img loading="lazy" decoding="async" src="assets/img/aerial-tower.jpg" alt="Aerial drone view of a comms tower over forested New England hills at golden hour" />
+        <figcaption class="meta"><b>Golden hour, from above</b><span>Aerial · Drone</span></figcaption>
+      </figure>
+      <figure class="frame half tilt reveal" data-cursor="view">
+        <img loading="lazy" decoding="async" src="assets/img/reel-poster.jpg" alt="Aerial drone shot of a home surrounded by fall foliage" />
+        <figcaption class="meta"><b>Home in the foliage</b><span>Real estate · Aerial</span></figcaption>
+      </figure>
+      <figure class="frame half tilt reveal" data-cursor="view">
+        <img loading="lazy" decoding="async" src="assets/img/aerial-hero.jpg" alt="Camera rig set up to shoot above a sports field at WPI" />
+        <figcaption class="meta"><b>On location</b><span>Behind the lens · WPI</span></figcaption>
       </figure>
       <figure class="frame half tilt reveal" data-cursor="view">
         <img loading="lazy" decoding="async" src="assets/img/event-cover.jpg" alt="Group portrait with the WPI mascot at a campus event" />
@@ -280,13 +286,13 @@
           </div>
 
           <button type="submit" class="book-submit">Send booking request <span aria-hidden="true">→</span></button>
-          <p class="book-note">Opens your email app with everything filled in — or write me directly at <a href="mailto:aaryanpanchal270@gmail.com">aaryanpanchal270@gmail.com</a>.</p>
+          <p class="book-note">Opens your email app with everything filled in — or write me directly at <a href="mailto:aaryanpanchal@icloud.com">aaryanpanchal@icloud.com</a>.</p>
         </div>
 
         <div class="book-sent">
           <span class="ok" aria-hidden="true">✓</span>
           <h3>Almost there.</h3>
-          <p>Your email app should be open with the request ready to send. If it didn't open, <a class="book-sent-link" href="mailto:aaryanpanchal270@gmail.com">click here to email me</a>.</p>
+          <p>Your email app should be open with the request ready to send. If it didn't open, <a class="book-sent-link" href="mailto:aaryanpanchal@icloud.com">click here to email me</a>.</p>
         </div>
       </form>
     </div>
@@ -297,7 +303,7 @@
     <p class="eyebrow reveal" style="justify-content:center">Or just say hi</p>
     <h2 class="connect-title split-words">Got a <em>shot</em> in mind?</h2>
     <p class="lead reveal" style="margin-inline:auto;text-align:center">Not sure which package fits, or working on something one-off? Tell me the idea — I'll figure out the rest.</p>
-    <a href="mailto:aaryanpanchal270@gmail.com" class="connect-email reveal magnetic">aaryanpanchal270@gmail.com <span aria-hidden="true">→</span></a>
+    <a href="mailto:aaryanpanchal@icloud.com" class="connect-email reveal magnetic">aaryanpanchal@icloud.com <span aria-hidden="true">→</span></a>
     <div class="socials reveal">
       <a href="https://linkedin.com/in/aaryanpanchal" target="_blank" rel="noopener">LinkedIn ↗</a>
       <a href="index.html#top">Portfolio →</a>
