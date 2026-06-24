@@ -270,7 +270,7 @@
   /* ── BOOKING: compose request as an email (book.html) ── */
   (function(){
     var form=document.getElementById('bookForm'); if(!form) return;
-    var EMAIL='aaryanpanchal@icloud.com';
+    var EMAIL='hello@aaryanpanchal.com';
 
     // Package buttons preselect a shoot type and jump to the form.
     document.querySelectorAll('[data-pick]').forEach(function(btn){
