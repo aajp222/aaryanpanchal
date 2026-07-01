@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal CRM · Aaryan Panchal</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0a0a0b" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/img/mark-white.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/crm.css" />
+
+  <!-- Pre-paint: enable JS hooks + set background FX defaults (no flash) -->
+  <script>
+    (function(){
+      var r=document.documentElement;
+      r.classList.remove('no-js'); r.classList.add('js');
+      r.setAttribute('data-bg','aurora'); r.setAttribute('data-grain','on');
+      r.setAttribute('data-vignette','on'); r.setAttribute('data-fx-motion','on');
+      r.style.setProperty('--fx-intensity','0.5'); r.style.setProperty('--fx-speed','34s');
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ── BACKGROUND FX ── -->
+  <div class="bg-fx" aria-hidden="true">
+    <div class="fx fx-aurora"></div><div class="fx fx-mesh"></div><div class="fx fx-grid"></div>
+    <div class="fx fx-spotlight"></div><div class="fx-grain"></div><div class="fx-vignette"></div>
+  </div>
+
+  <!-- ── OVERLAYS ── -->
+  <div id="progress" class="fixed-layer" aria-hidden="true"><span></span></div>
+  <div id="cur-dot" class="fixed-layer" aria-hidden="true"></div>
+  <div id="cur-ring" class="fixed-layer" aria-hidden="true"><span class="cur-txt">Work</span></div>
+
+  <!-- ── LOCK SCREEN ("get in") ── -->
+  <div id="lockScreen">
+    <div class="lock-card" id="lockCard">
+      <img class="lock-mark" src="assets/img/mark-white.png" alt="" aria-hidden="true" />
+      <p class="lock-eyebrow">Private · Restricted</p>
+      <h1 class="lock-title">This is my personal CRM.</h1>
+      <p class="lock-sub">Fitchburg outreach pipeline for the local-website agency. Enter the passcode to get in.</p>
+      <form class="lock-form" id="lockForm" autocomplete="off">
+        <input class="lock-input" id="lockInput" type="password" inputmode="text"
+          placeholder="passcode" aria-label="Passcode" autocomplete="off"
+          autocapitalize="off" autocorrect="off" spellcheck="false" />
+        <button class="lock-btn" type="submit">Get in →</button>
+        <div class="lock-err" id="lockErr" role="alert">Nope. Try again.</div>
+      </form>
+      <p class="lock-hint">If you're not me, there's nothing to see here — the front door is <a href="index.html">aaryanpanchal.com</a>.</p>
+    </div>
+  </div>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="index.html#top" class="nav-logo" aria-label="Aaryan Panchal — home">
+      <img class="glyph" src="assets/img/mark-white.png" alt="" aria-hidden="true" />
+    </a>
+    <div class="nav-right">
+      <a href="index.html" class="pill secondary">Back to site</a>
+      <button class="pill secondary" id="lockBtn" type="button">Lock</button>
+    </div>
+  </nav>
+
+  <!-- ── CRM APP ── -->
+  <main id="crmRoot" hidden>
+    <div class="crm-head">
+      <div>
+        <p class="crm-eyebrow">This is my personal CRM</p>
+        <h1 class="crm-title">Fitchburg <em>outreach</em>.</h1>
+        <p class="crm-sub">Website-agency prospecting · Fitchburg · Leominster · Westminster. Drag leads through the pipeline, log next actions, and track pipeline &amp; MRR.</p>
+      </div>
+      <div class="crm-actions">
+        <button class="crm-btn solid" id="addBtn">+ Add lead</button>
+        <button class="crm-btn" id="planBtn">Game plan</button>
+        <button class="crm-btn" id="tmplBtn">Templates</button>
+        <button class="crm-btn" id="exportBtn">Export</button>
+        <button class="crm-btn" id="importBtn">Import</button>
+        <input type="file" id="importFile" accept="application/json" style="display:none" />
+      </div>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="crm-toolbar">
+      <input type="search" id="search" placeholder="Search business or town…" />
+      <select id="fCat"><option value="">All categories</option><option>Restaurant</option><option>Nursery</option></select>
+      <select id="fPrio"><option value="">All priorities</option><option>High</option><option>Medium</option><option>Low</option></select>
+      <select id="fStage"><option value="">All stages</option></select>
+      <div class="views">
+        <button data-view="board" class="active">Board</button>
+        <button data-view="table">Table</button>
+        <button data-view="tasks">Tasks</button>
+      </div>
+    </div>
+
+    <div id="boardView"></div>
+    <div id="tableView" style="display:none"></div>
+    <div id="tasksView" style="display:none"></div>
+
+    <div class="crm-foot">
+      Data is saved in <b>this browser only</b> (localStorage). Use <b>Export</b> to back up or move it.
+      &middot; Built from the Local Prospecting Report.
+    </div>
+  </main>
+
+  <!-- Edit / Add modal -->
+  <div class="overlay" id="editOverlay">
+    <div class="modal">
+      <h2 id="editTitle">Edit lead</h2>
+      <div class="grid2">
+        <label class="f">Business name<input id="e_name" /></label>
+        <label class="f">Category
+          <select id="e_category"><option>Restaurant</option><option>Nursery</option></select></label>
+        <label class="f">Town<input id="e_town" /></label>
+        <label class="f">Phone<input id="e_phone" /></label>
+        <label class="f">Address<input id="e_address" /></label>
+        <label class="f">Current web presence
+          <select id="e_presence">
+            <option>No website</option><option>Facebook only</option><option>Directory microsite</option>
+            <option>Has site</option><option>Has site (split brand)</option>
+          </select></label>
+        <label class="f">Priority
+          <select id="e_priority"><option>High</option><option>Medium</option><option>Low</option></select></label>
+        <label class="f">Stage<select id="e_stage"></select></label>
+        <label class="f">Est. setup $<input id="e_setup" type="number" min="0" /></label>
+        <label class="f">Est. monthly $<input id="e_monthly" type="number" min="0" /></label>
+        <label class="f">Contact name<input id="e_contact" /></label>
+        <label class="f">Email<input id="e_email" type="email" /></label>
+        <label class="f">Next action (task)<input id="e_action" /></label>
+        <label class="f">Due date<input id="e_due" type="date" /></label>
+      </div>
+      <label class="f">Pitch angle<input id="e_pitch" /></label>
+      <label class="f">Notes<textarea id="e_notes"></textarea></label>
+      <div class="modal-actions">
+        <button class="crm-btn danger" id="deleteBtn">Delete</button>
+        <div style="display:flex; gap:.5rem;">
+          <button class="crm-btn" id="cancelEdit">Cancel</button>
+          <button class="crm-btn solid" id="saveEdit">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Templates modal -->
+  <div class="overlay" id="tmplOverlay">
+    <div class="modal wide">
+      <h2>Outreach templates</h2>
+      <label class="f">Personalize for
+        <select id="tmplLead"><option value="">— pick a business (optional) —</option></select></label>
+      <div id="tmplBody"></div>
+      <div class="modal-actions"><span></span>
+        <button class="crm-btn solid" id="closeTmpl">Done</button></div>
+    </div>
+  </div>
+
+  <!-- Plan modal -->
+  <div class="overlay" id="planOverlay">
+    <div class="modal wide">
+      <h2>The 2-week game plan</h2>
+      <div class="legend">
+        <span><b>20</b> restaurants</span><span><b>5</b> nurseries</span>
+        <span><span class="tag prio-High">High</span> no-site / Facebook-only — hit first</span>
+        <span><span class="tag prio-Medium">Medium</span> directory microsites</span>
+        <span><span class="tag prio-Low">Low</span> has a site — modernize/SEO pitch</span>
+      </div>
+      <div id="planSteps"></div>
+      <p class="crm-muted" id="planNote"></p>
+      <div class="modal-actions"><span></span>
+        <button class="crm-btn solid" id="closePlan">Let's go</button></div>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/crm.js" defer></script>
+</body>
+</html>

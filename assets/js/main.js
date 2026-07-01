@@ -427,6 +427,20 @@
       }
     });
 
+    // type "panchal" anywhere (not in a field) → the personal CRM
+    var CRM_WORD='panchal', crmBuf='';
+    addEventListener('keydown',function(e){
+      var t=e.target, tag=(t&&t.tagName||'').toLowerCase();
+      if(tag==='input'||tag==='textarea'||tag==='select'||(t&&t.isContentEditable)) return;
+      if(!e.key || e.key.length!==1) return;
+      crmBuf=(crmBuf+e.key.toLowerCase()).slice(-CRM_WORD.length);
+      if(crmBuf===CRM_WORD){
+        crmBuf='';
+        document.body.classList.add('warp');
+        setTimeout(function(){ location.href='crm.html'; }, reduce?0:620);
+      }
+    });
+
     // the logo can take five hits
     var logo=document.querySelector('.nav-logo'), taps=0, rolling=false;
     if(logo && logo.getAttribute('href')==='#top'){
