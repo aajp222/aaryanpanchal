@@ -13,7 +13,7 @@
      lives in the page source, so it's obscurity, not real security.
      ▶ To change your passcode, edit the one line below.
   ───────────────────────────────────────────────────────────── */
-  var PASSCODE   = 'gompei';               // ▶ your passcode — change me
+  var PASSCODE   = 'Gompei12';               // ▶ your passcode — change me
   var UNLOCK_KEY = 'ap_crm_unlocked';
 
   var lockScreen = document.getElementById('lockScreen');
