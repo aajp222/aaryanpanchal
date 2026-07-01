@@ -111,7 +111,7 @@ Hidden layer, discoverable from hints in the Playground dossier:
 - **`void.html`** — a fake terminal (noindex): `help`, `whoami`, `snake`
   (playable, text-mode), `matrix`, `theme`, `gompei`, etc.
 - The **footer full stop** on every page links to the void
-- **5 clicks on the homepage logo** → barrel roll (plus icon bursts)
+- **5 clicks on the homepage logo** → barrel roll (plus letter bursts)
 - A styled **console message** for devtools-openers
 
 All of it is dependency-free vanilla JS; games/sequencer suppress the
