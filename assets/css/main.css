@@ -108,19 +108,21 @@ header,section,.marquee,.bigfoot,footer{position:relative;z-index:1;}
 #progress span{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;
   background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 40%,#fff));}
 
-/* ── CUSTOM CURSOR (fine pointers) — spinning AP mark ── */
+/* ── CUSTOM CURSOR (fine pointers) — AP mark ── */
 #cur-dot,#cur-ring{display:none;}
 @media (hover:hover) and (pointer:fine){
   body.has-cursor{cursor:none;}
-  body.has-cursor a,body.has-cursor button{cursor:none;}
+  body.has-cursor *{cursor:none!important;}
   body.has-cursor #cur-dot{display:block;position:fixed;top:0;left:0;width:28px;height:28px;
     z-index:9600;pointer-events:none;transform:translate(-50%,-50%);
     transition:opacity .3s,width .2s,height .2s;}
   #cur-dot::after{content:"";display:block;width:100%;height:100%;background:var(--accent);
     -webkit-mask:url("../img/mark-white.png") center/contain no-repeat;
     mask:url("../img/mark-white.png") center/contain no-repeat;
-    mix-blend-mode:difference;animation:curSpin 4s linear infinite;}
+    mix-blend-mode:difference;}
   body.cur-link #cur-dot{width:36px;height:36px;}
+  body.cur-text #cur-dot{width:4px;height:26px;}
+  body.cur-text #cur-dot::after{-webkit-mask:none;mask:none;border-radius:2px;}
   body.has-cursor #cur-ring{display:flex;align-items:center;justify-content:center;position:fixed;top:0;left:0;
     width:38px;height:38px;border:1px solid var(--accent);border-radius:50%;z-index:9599;
     pointer-events:none;transform:translate(-50%,-50%);opacity:.45;
@@ -130,8 +132,8 @@ header,section,.marquee,.bigfoot,footer{position:relative;z-index:1;}
   body.cur-view #cur-ring{width:74px;height:74px;opacity:1;background:var(--accent);border-color:transparent;}
   body.cur-view #cur-dot{opacity:0;}
   body.cur-view .cur-txt{opacity:1;}
+  body.cur-text #cur-ring{opacity:0;}
 }
-@keyframes curSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
 /* ── NAME-LETTER CURSOR TRAIL ── */
 #icon-trail{position:fixed;inset:0;z-index:9550;pointer-events:none;overflow:hidden;}

@@ -30,9 +30,13 @@
       var mx=0,my=0,rx=0,ry=0;
       addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; dot.style.transform='translate('+mx+'px,'+my+'px) translate(-50%,-50%)'; }, {passive:true});
       (function loop(){ rx+=(mx-rx)*.14; ry+=(my-ry)*.14; ring.style.transform='translate('+rx+'px,'+ry+'px) translate(-50%,-50%)'; requestAnimationFrame(loop); })();
-      document.querySelectorAll('a,button,.magnetic').forEach(function(el){
+      document.querySelectorAll('a,button,select,.type-chips label,.magnetic').forEach(function(el){
         el.addEventListener('mouseenter', function(){ document.body.classList.add('cur-link'); });
         el.addEventListener('mouseleave', function(){ document.body.classList.remove('cur-link'); });
+      });
+      document.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]),textarea').forEach(function(el){
+        el.addEventListener('mouseenter', function(){ document.body.classList.add('cur-text'); });
+        el.addEventListener('mouseleave', function(){ document.body.classList.remove('cur-text'); });
       });
       document.querySelectorAll('[data-cursor]').forEach(function(el){
         el.addEventListener('mouseenter', function(){ document.body.classList.add('cur-view'); });
