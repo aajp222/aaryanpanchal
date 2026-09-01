@@ -171,3 +171,40 @@ promise reconciliation, does not turn grief into revenge or faith into certainty
 and does not make another person responsible for one man's transformation.
 
 It ends *still becoming*, because he is.
+
+---
+
+## 9. The Map
+
+`/becoming/map` — the knowledge map, and the one page that is entirely derived
+rather than authored.
+
+`lib/graph.ts` reads every theme tagged on a chapter or a piece. Each theme
+becomes a node; two themes on the same document get an edge. Nothing is
+positioned by hand, which means the map redraws itself as the archive grows and
+can show Aaryan relationships he didn't arrange.
+
+Every visual property carries information:
+
+| Property | Means |
+|---|---|
+| Position on the ring | Mean chapter position — so the circle is the book, read clockwise. `india` and `childhood` sit at the top; `surrender` and `flesh` come back round to meet them. |
+| Size | How much has been written about it. |
+| Hue | The chapter the concept belongs to — `faith` verdant, `trust` steel, `love` gold, `surrender` sky. |
+| Chroma | How far along the stone → flesh arc it sits, so the ring brightens clockwise. |
+| Chords | Themes that genuinely co-occur, weighted by how often. |
+
+Edges below weight 2 are dropped as noise; the rest sit at 13% opacity so the
+resting state is a constellation, and selecting a concept lights only its own.
+
+Selecting one opens what the brief asked for: what it connects to, the chapters
+it runs through, everything written about it, the raw → shaped pairs where a
+thought was caught mid-change, and — the point — **where the writing disagrees
+with itself**. `contradicts` is declared in frontmatter and read from either
+side. The first one it surfaces is the whole site: *mera dil patthar ho gaya*
+vs *take the stone*.
+
+Ring nodes are real focusable buttons with `aria-pressed`; below the
+sm breakpoint the labels drop and the ring becomes a pure constellation, with a
+chip list carrying the names. The panel is always text, so nothing depends on
+being able to read the graph.

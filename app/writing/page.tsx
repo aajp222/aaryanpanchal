@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getPieces, getPiece, themeIndex, getChapter } from '@/lib/content';
 import Instrument, { type Playable } from '@/components/scenes/Instrument';
@@ -69,6 +70,14 @@ export default function WritingPage() {
 
       <section className="py-[clamp(3rem,7vw,6rem)]">
         <ArchiveBrowser entries={entries} themes={themeIndex()} />
+        <p className="mt-12 border-t border-[var(--color-rule-soft)] pt-6">
+          <Link
+            href="/becoming/map/"
+            className="border-b border-[var(--accent-hair)] pb-1 font-display text-[clamp(1.15rem,2vw,1.5rem)] italic transition-colors hover:border-[var(--accent)]"
+          >
+            See all of it as a map →
+          </Link>
+        </p>
       </section>
     </Wrap></Tinted>
   );

@@ -66,6 +66,11 @@ No server, no env vars.
   nothing at all and the page opens only when you let go.
 - **The instrument** at `/writing` — press a letter, get a shape, a synthesised
   tone and a poem. No audio files; oscillators only, silent until asked.
+- **The map** at `/becoming/map` — the concepts as a ring, computed from the
+  writing rather than drawn. Position is where an idea sits in the twenty
+  chapters, size is how much there is, hue is the chapter it belongs to and
+  chroma is how far along the arc it sits. It surfaces the contradictions,
+  including the site's own thesis: *mera dil patthar ho gaya* vs *take the stone*.
 - **Names are enforced, not just intended.** `npm run build` fails if a private
   name reaches `content/`. See [content/README.md](./content/README.md).
 
@@ -78,7 +83,7 @@ passcode-gated lead tracker whose data never leaves the browser.
 
 ## Verified
 
-Static export of 60 pages. No 404s, console errors, or horizontal overflow at
+Static export of 61 pages. No 404s, console errors, or horizontal overflow at
 1440px or 390px. Every scene keeps its meaning under `prefers-reduced-motion` and
 is operable by keyboard alone. Text contrast passes WCAG AA on every chapter
 including the twilight and night ones (body 8:1–12:1).

@@ -50,6 +50,9 @@ export const pieceFrontmatter = z.object({
   /** Where it belongs in the story. */
   chapter: z.string().optional(),
   related: z.array(z.string()).default([]),
+  /** Pieces this one disagrees with. The archive keeps its contradictions on
+   *  purpose — a thought that changed is the whole point of keeping drafts. */
+  contradicts: z.array(z.string()).default([]),
   version: z.number().int().positive().default(1),
   /** Raw and angry drafts stay out of search results unless opted in. */
   index: z.boolean().default(false),

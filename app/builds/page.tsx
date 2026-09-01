@@ -37,6 +37,13 @@ const BUILDS: Build[] = [
     href: '/becoming/',
   },
   {
+    name: 'The map',
+    year: '2026',
+    what: 'The concepts in Becoming as a network, computed from the writing rather than drawn by hand — position around the ring is where an idea sits in the story, size is how much there is, colour comes from the chapter it lives closest to. It redraws itself as the archive grows, which means it can show me things I did not arrange.',
+    stack: ['SVG', 'React'],
+    href: '/becoming/map/',
+  },
+  {
     name: 'The instrument',
     year: '2026',
     what: 'Press a letter, get a shape, a synthesised tone, and a poem. No samples, no audio files — just oscillators, and the whole archive mapped onto a keyboard.',

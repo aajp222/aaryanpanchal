@@ -47,6 +47,14 @@ export default function BecomingIndex() {
             <p className="label mt-8">
               {spine.length} chapters · about an hour · start anywhere, but the order is the argument
             </p>
+            <p className="mt-5">
+              <Link
+                href="/becoming/map/"
+                className="border-b border-[var(--accent-hair)] pb-1 font-display text-[1.15rem] italic transition-colors hover:border-[var(--accent)]"
+              >
+                or see how the ideas connect →
+              </Link>
+            </p>
           </Reveal>
         </header>
       </Wrap>

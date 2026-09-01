@@ -25,6 +25,7 @@ date: "2025"        # fuzzy is fine — "2024", "2025-03", omit entirely
 themes: [surrender, love, control]
 chapter: 19-open-hands
 related: [trying-raw]
+contradicts: [take-the-stone]   # a piece this one disagrees with
 version: 2          # take 1 / take 2 / take 3
 index: false        # false keeps it out of search results (the default)
 key: o              # which key on the instrument plays it
@@ -42,6 +43,11 @@ is deliberate. Nothing reflows it and nothing tidies it.
 To show a thought changing, write two files and point the shaped one at the raw
 one with `rawOf`. The site offers them as a toggle, with neither labelled as the
 better one.
+
+`contradicts` is for the other kind of change — where you simply disagree with
+something you wrote before, and both are staying. The Map collects these under
+*disagrees with itself*; it reads the link from either side, so you only need to
+declare it once.
 
 ## Adding a chapter
 

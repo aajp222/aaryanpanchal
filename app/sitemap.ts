@@ -6,7 +6,7 @@ export const dynamic = 'force-static';
 const BASE = 'https://aaryanpanchal.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const surface = ['', '/work', '/work/episafe', '/builds', '/writing', '/becoming', '/about', '/book'];
+  const surface = ['', '/work', '/work/episafe', '/builds', '/writing', '/becoming', '/becoming/map', '/about', '/book'];
 
   return [
     ...surface.map((p) => ({
