@@ -48,13 +48,11 @@ export default function ChapterGate({
   slug,
   from,
   questions,
-  title,
   number,
 }: {
   slug: string;
   from: string;
   questions: GateQuestion[];
-  title: string;
   number?: number;
 }) {
   const many = questions.length > 1;
@@ -86,8 +84,10 @@ export default function ChapterGate({
       <p className="label !text-[var(--accent-ink)]">
         {number ? `Chapter ${String(number).padStart(2, '0')}` : 'Chapter'} · locked
       </p>
+      {/* The name is part of what is being withheld, so the gate shows the
+          number instead of the title. */}
       <h1 className="mt-5 font-display font-[350] text-[clamp(2.6rem,9vw,7rem)] leading-[0.92] tracking-[-0.03em]">
-        {title}
+        {number ? `Chapter ${String(number).padStart(2, '0')}` : 'Locked'}
       </h1>
 
       <p className="measure mt-8 text-[clamp(1.02rem,1.5vw,1.16rem)] text-[var(--color-ink-2)]">

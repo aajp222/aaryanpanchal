@@ -223,10 +223,22 @@ Baptism is deliberately harder: four questions drawn from the whole first half,
 standing in front of the one chapter that is about refusing to treat baptism as
 a transaction. The gate and the chapter argue the same thing.
 
+A locked chapter withholds its **name** as well as its text — contents page,
+chapter navigation, the map, the archive, the browser tab. It shows a redaction
+bar instead, at a fixed width so it cannot leak how long the title is. Both
+states are rendered and CSS chooses, keyed off `data-unlocked` on `<html>`, so
+nothing is ever briefly visible before being masked.
+
 Mechanically: clues in `lib/gates.ts` (server-only — answers are hashed at build
 time and only hashes cross to the client), a pre-paint script in
-`LockScript.tsx` that sets `data-locked` on `<html>` before anything renders so
-neither the text nor the gate ever flashes, and progress in `localStorage`.
+`LockScript.tsx` that sets `data-locked` and `data-unlocked` on `<html>` before
+anything renders, `LockSync.tsx` re-applying the same decision on every
+client-side navigation, and progress in `localStorage`.
+
+> The soft-navigation half matters more than it sounds. Next routes between
+> pages without reloading, so a script that only runs on a cold load never runs
+> again — which meant every chapter opened the moment you arrived by clicking a
+> link, which is how everybody arrives.
 
 Three decisions worth keeping:
 

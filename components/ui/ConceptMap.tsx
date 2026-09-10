@@ -224,7 +224,11 @@ export default function ConceptMap({ nodes, edges }: { nodes: MapNode[]; edges: 
                   {active.chapters.map((c) => (
                     <li key={c.slug}>
                       <Link href={`/becoming/${c.slug}/`} className="font-display text-xl hover:opacity-60">
-                        {c.number ? `${String(c.number).padStart(2, '0')} — ` : ''}{c.title}
+                        {c.number ? `${String(c.number).padStart(2, '0')} — ` : ''}
+                        {/* Locked chapters keep their names here too. The CSS
+                            in LockStyles resolves this before paint. */}
+                        <span className="ch-name" data-slug={c.slug}>{c.title}</span>
+                        <span className="ch-bar" data-slug={c.slug} role="img" aria-label="Locked chapter" />
                       </Link>
                     </li>
                   ))}

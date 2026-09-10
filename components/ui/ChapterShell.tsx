@@ -3,6 +3,7 @@ import { paletteFor, paletteVars } from '@/lib/palette';
 import { neighbours, type Chapter } from '@/lib/content';
 import { RedactionNote } from './Redacted';
 import ChapterGate, { type GateQuestion } from './ChapterGate';
+import ChapterName from './ChapterName';
 import ReadingProgress from './ReadingProgress';
 import Reveal from './Reveal';
 import { Wrap } from './Section';
@@ -30,7 +31,6 @@ export default function ChapterShell({
               slug={gate.slug}
               from={gate.from}
               questions={gate.questions}
-              title={chapter.title}
               number={chapter.number}
             />
           </Wrap>
@@ -78,9 +78,11 @@ export default function ChapterShell({
               {prev && (
                 <Link href={`/becoming/${prev.slug}/`} className="group block">
                   <span className="label">← Previous</span>
-                  <span className="mt-1 block font-display text-2xl transition-opacity group-hover:opacity-60">
-                    {prev.title}
-                  </span>
+                  <ChapterName
+                    slug={prev.slug}
+                    title={prev.title}
+                    className="mt-1 block font-display text-2xl transition-opacity group-hover:opacity-60"
+                  />
                 </Link>
               )}
             </div>
@@ -91,9 +93,11 @@ export default function ChapterShell({
               {next && (
                 <Link href={`/becoming/${next.slug}/`} className="group block">
                   <span className="label">Next →</span>
-                  <span className="mt-1 block font-display text-2xl transition-opacity group-hover:opacity-60">
-                    {next.title}
-                  </span>
+                  <ChapterName
+                    slug={next.slug}
+                    title={next.title}
+                    className="mt-1 block font-display text-2xl transition-opacity group-hover:opacity-60"
+                  />
                 </Link>
               )}
             </div>

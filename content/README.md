@@ -132,11 +132,27 @@ you only need genuinely different answers, not spelling variants.
 the answers at build time and hand the gate component only the hashes. That
 keeps them out of view-source.
 
+### Names
+
+A locked chapter withholds its name as well as its text — on the contents page,
+in the chapter navigation, on the map, in the archive's "where it belongs in the
+story", and in the browser tab. It shows a redaction bar instead, the same
+gesture the site uses for the people it will not name, at a **fixed width** so
+the bar cannot leak how long the title is.
+
+Both states are rendered and CSS chooses between them, keyed off `data-unlocked`
+on `<html>`, which the pre-paint script sets. That means names are masked by
+default and never appear briefly before being hidden.
+
+Side chapters (`content/becoming/side/`) are never gated — they sit beside the
+story rather than in it, and keep their names.
+
 ### What a lock actually does
 
-- A locked chapter renders the gate instead of the writing. A script in
-  `LockScript.tsx` runs before the page paints, so the text never flashes and
-  a returning reader never sees the gate flash either.
+- A locked chapter renders the gate instead of the writing. `LockScript.tsx`
+  runs before the page paints so the text never flashes, and `LockSync.tsx`
+  re-applies the decision on every client-side navigation — without it, clicking
+  a link opened every chapter, since the script only runs on a cold load.
 - Progress lives in `localStorage` under `becoming.unlocked`. The contents page
   shows how many are open, offers a *continue at…* link, and has a *start over*
   control once you're past the free four.

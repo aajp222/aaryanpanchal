@@ -14,9 +14,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const chapter = getChapter(slug);
   if (!chapter) return {};
-  const n = chapter.number ? `${String(chapter.number).padStart(2, '0')} — ` : '';
+  const n = chapter.number ? String(chapter.number).padStart(2, '0') : '';
+  // A gated chapter withholds its name everywhere, including the browser tab
+  // and any link preview.
+  if (isGated(slug)) {
+    return {
+      title: `Chapter ${n} · Becoming`,
+      description: 'A locked chapter. One question opens it, and the answer is in the chapter before.',
+      robots: { index: false, follow: false },
+    };
+  }
   return {
-    title: `${n}${chapter.title} · Becoming`,
+    title: `${n} — ${chapter.title} · Becoming`,
     description: chapter.summary,
     // A gated chapter is locked from a crawler's point of view too — it can
     // never answer the question — so it stays out of the index. Chapters 01–04

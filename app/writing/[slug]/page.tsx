@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPieces, getPiece, getChapter } from '@/lib/content';
 import PieceToggle from '@/components/ui/PieceToggle';
+import ChapterName from '@/components/ui/ChapterName';
 import Reveal from '@/components/ui/Reveal';
 import { Wrap } from '@/components/ui/Section';
 
@@ -80,7 +81,7 @@ export default async function PiecePage({ params }: { params: Promise<{ slug: st
                     className="border-b border-[var(--accent-hair)] pb-0.5 hover:border-[var(--accent)]"
                   >
                     {chapter.number ? `Chapter ${String(chapter.number).padStart(2, '0')} — ` : ''}
-                    {chapter.title} →
+                    <ChapterName slug={chapter.slug} title={chapter.title} /> →
                   </Link>
                 </dd>
               </div>
