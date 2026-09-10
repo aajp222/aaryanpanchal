@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getSpine, getSideChapters } from '@/lib/content';
 import { paletteFor } from '@/lib/palette';
+import ContentsList, { type ContentsEntry } from '@/components/ui/ContentsList';
+import { isGated } from '@/lib/gates';
 import Monument from '@/components/ui/Monument';
 import Reveal from '@/components/ui/Reveal';
 import { Wrap } from '@/components/ui/Section';
@@ -32,6 +34,18 @@ export default function BecomingIndex() {
   const spine = getSpine();
   const asides = getSideChapters();
 
+  const contents: ContentsEntry[] = spine.map((c) => {
+    const p = paletteFor(c.slug);
+    return {
+      slug: c.slug,
+      number: c.number!,
+      title: c.title,
+      subtitle: c.subtitle,
+      gated: isGated(c.slug),
+      color: `oklch(${p.accent[0]}% ${(p.accent[1] * p.chroma).toFixed(3)} ${p.accent[2]})`,
+    };
+  });
+
   return (
     <Tinted palette="home">
       <Wrap>
@@ -45,7 +59,7 @@ export default function BecomingIndex() {
               I haven&#39;t. Everyone in it except me is unnamed.
             </p>
             <p className="label mt-8">
-              {spine.length} chapters · about an hour · start anywhere, but the order is the argument
+              {spine.length} chapters · about an hour · the first four are open, the rest ask a question first
             </p>
             <p className="mt-5">
               <Link
@@ -60,31 +74,7 @@ export default function BecomingIndex() {
       </Wrap>
 
       <Wrap>
-        <ol className="border-t border-[var(--color-rule-soft)]">
-          {spine.map((c, i) => (
-            <li key={c.slug}>
-              <Reveal delay={Math.min(i * 30, 300)}>
-                <Link
-                  href={`/becoming/${c.slug}/`}
-                  className="group flex items-baseline gap-[clamp(1rem,3vw,2.5rem)] border-b border-[var(--color-rule-soft)] py-[clamp(1.1rem,2.2vw,1.7rem)]"
-                >
-                  <span className="label w-8 shrink-0 tabular-nums">
-                    {String(c.number).padStart(2, '0')}
-                  </span>
-                  <span className="flex flex-1 flex-wrap items-baseline gap-x-5 gap-y-1">
-                    <span className="font-display text-[clamp(1.6rem,4.4vw,3rem)] leading-none transition-opacity group-hover:opacity-60">
-                      {c.title}
-                    </span>
-                    {c.subtitle && (
-                      <span className="text-[0.95rem] text-[var(--color-ink-3)]">{c.subtitle}</span>
-                    )}
-                  </span>
-                  <span className="flex items-center self-center"><Swatch slug={c.slug} /></span>
-                </Link>
-              </Reveal>
-            </li>
-          ))}
-        </ol>
+        <ContentsList entries={contents} />
 
         {asides.length > 0 && (
           <section className="py-[clamp(3.5rem,8vw,7rem)]">

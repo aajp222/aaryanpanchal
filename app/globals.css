@@ -244,3 +244,11 @@
   padding-inline: max(clamp(1.25rem, 4vw, 3.5rem), calc(50vw - 33rem));
   max-width: 100vw;
 }
+
+
+/* ── Locked chapters ──────────────────────────────────────────────
+   The pre-paint script in LockScript sets data-locked on <html> before
+   anything renders, so neither the writing nor the gate ever flashes.
+   --------------------------------------------------------------- */
+html[data-locked] .chapter-body { display: none; }
+html:not([data-locked]) .chapter-gate { display: none; }

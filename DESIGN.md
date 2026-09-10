@@ -208,3 +208,35 @@ Ring nodes are real focusable buttons with `aria-pressed`; below the
 sm breakpoint the labels drop and the ring becomes a pure constellation, with a
 chip list carrying the names. The panel is always text, so nothing depends on
 being able to read the graph.
+
+
+---
+
+## 10. The gates
+
+Chapters 01–04 are open, because nobody should hit a lock before they are
+invested — by *I NEEDED GOD* at the end of Search, the reader is committed.
+From 05 on, each chapter asks one question first, and the answer is always in
+the chapter just finished. The only thing being tested is whether you read.
+
+Baptism is deliberately harder: four questions drawn from the whole first half,
+standing in front of the one chapter that is about refusing to treat baptism as
+a transaction. The gate and the chapter argue the same thing.
+
+Mechanically: clues in `lib/gates.ts` (server-only — answers are hashed at build
+time and only hashes cross to the client), a pre-paint script in
+`LockScript.tsx` that sets `data-locked` on `<html>` before anything renders so
+neither the text nor the gate ever flashes, and progress in `localStorage`.
+
+Three decisions worth keeping:
+
+- **It fails open.** No storage, no JavaScript, or a crawler — the writing shows.
+  Being locked out of an autobiography by a browser setting is a worse outcome
+  than an unearned read.
+- **Matching is generous.** Case, punctuation, accents, articles and stray
+  spaces are discarded. The question is "did you read this", not "can you spell it".
+- **Gated chapters are `noindex` and out of the sitemap**, since a crawler can
+  never answer. 01–04 stay indexable, so the opening of the story is still findable.
+
+It is a ritual, not security: the text is in the page source either way. That is
+the same honesty the redaction guard is built on — hidden is not private.

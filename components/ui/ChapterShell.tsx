@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { paletteFor, paletteVars } from '@/lib/palette';
 import { neighbours, type Chapter } from '@/lib/content';
 import { RedactionNote } from './Redacted';
+import ChapterGate, { type GateQuestion } from './ChapterGate';
 import ReadingProgress from './ReadingProgress';
 import Reveal from './Reveal';
 import { Wrap } from './Section';
@@ -9,9 +10,12 @@ import { Wrap } from './Section';
 export default function ChapterShell({
   chapter,
   children,
+  gate,
 }: {
   chapter: Chapter;
   children: React.ReactNode;
+  /** Present when this chapter asks a question before it opens. */
+  gate?: { slug: string; from: string; questions: GateQuestion[] } | null;
 }) {
   const palette = paletteFor(chapter.slug);
   const { prev, next } = neighbours(chapter.slug);
@@ -19,6 +23,21 @@ export default function ChapterShell({
 
   return (
     <div className="chapter" style={paletteVars(palette)}>
+      {gate && (
+        <div className="chapter-gate">
+          <Wrap>
+            <ChapterGate
+              slug={gate.slug}
+              from={gate.from}
+              questions={gate.questions}
+              title={chapter.title}
+              number={chapter.number}
+            />
+          </Wrap>
+        </div>
+      )}
+
+      <div className={gate ? 'chapter-body' : undefined}>
       <ReadingProgress />
 
       {/* ── The chapter's title card. One sentence, all the room it needs. ── */}
@@ -81,6 +100,7 @@ export default function ChapterShell({
           </div>
         </Wrap>
       </nav>
+      </div>
     </div>
   );
 }

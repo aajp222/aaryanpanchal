@@ -103,3 +103,52 @@ with guard 1 if you'd remembered to write the name down. Add false positives to
 
 Neither guard is a substitute for reading what you wrote. Hidden is not the same
 as private: anything genuinely sensitive does not belong in a public repo at all.
+
+
+---
+
+## The gates
+
+Chapters 01–04 are open. From **05** on, each chapter asks one question before
+it opens, and the answer is always in the chapter you just finished — never a
+riddle, never a hunt. **10 — Baptism** is the exception: it asks four questions
+drawn from the whole first half, and it sits directly in front of the chapter
+about refusing to let baptism become a transaction.
+
+Clues live in `lib/gates.ts`, one entry per chapter:
+
+```ts
+{ slug: '06-love', from: '05-her', questions: [{
+  prompt: 'Finish it — "it felt like i\u2019d been ____, not introduced."',
+  answers: ['found'],
+}]},
+```
+
+List every phrasing you would accept in `answers`. Matching is already generous
+— case, punctuation, accents, articles and stray spaces are all discarded — so
+you only need genuinely different answers, not spelling variants.
+
+**Answers never reach the browser.** `lib/gates.ts` is server-only; pages hash
+the answers at build time and hand the gate component only the hashes. That
+keeps them out of view-source.
+
+### What a lock actually does
+
+- A locked chapter renders the gate instead of the writing. A script in
+  `LockScript.tsx` runs before the page paints, so the text never flashes and
+  a returning reader never sees the gate flash either.
+- Progress lives in `localStorage` under `becoming.unlocked`. The contents page
+  shows how many are open, offers a *continue at…* link, and has a *start over*
+  control once you're past the free four.
+- If `localStorage` is unavailable — a private window, blocked site data — the
+  gate **fails open** and the reader gets the writing. Being locked out of
+  someone's autobiography by a browser setting is worse than an unearned read.
+- Gated chapters carry `noindex` and are kept out of the sitemap: a crawler can
+  never answer the question, so from its point of view they are always locked.
+  Chapters 01–04 stay indexable, which keeps the opening of the story findable.
+
+**This is a ritual, not security.** The site is a static export, so every
+chapter's text is in the page source whether it is locked or not, and turning
+off JavaScript shows everything. The gate is there to pace a reader who wants
+to be paced — it is not protection, and nothing genuinely private should rely
+on it.
