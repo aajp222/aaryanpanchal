@@ -1,0 +1,33 @@
+{
+  "name": "aaryanpanchal",
+  "version": "2.0.0",
+  "private": true,
+  "description": "aaryanpanchal.com — the surface and the becoming",
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/check-names.mjs && node scripts/archive-index.mjs && next build",
+    "start": "npx serve out",
+    "lint": "next lint",
+    "images": "node scripts/images.mjs",
+    "check:names": "node scripts/check-names.mjs"
+  },
+  "dependencies": {
+    "framer-motion": "^13.1.1",
+    "gray-matter": "^4.0.3",
+    "next": "^15.5.24",
+    "next-mdx-remote": "^6.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "postcss": "^8.5.26",
+    "sharp": "^0.35.4",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
+  }
+}

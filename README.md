@@ -1,99 +1,89 @@
 # aaryanpanchal.com
 
-Personal site for **Aaryan Panchal** — mechanical engineer, founder of
-**EpiSafe** (an epinephrine auto-injector thin enough to live in a phone case),
-and Co-Marketing Chair of WPI's Student Government.
+Personal site for **Aaryan Panchal** — mechanical engineer, founder of **EpiSafe**
+(an epinephrine auto-injector thin enough to live in a phone case), and
+Co-Marketing Chair of WPI's Student Government.
 
-A fast, editorial, dark single-page site with a signature **scroll-driven phone
-dock**, a **per-role theme-morph** (EpiSafe orange ↔ SGA crimson ↔ neutral),
-and a dedicated EpiSafe case-study page.
+Two things live here. A bright editorial portfolio, and **Becoming** — a
+twenty-chapter autobiography reached straight from the navigation, about a
+seven-year-old who decided his heart had become stone and everything that
+happened afterwards.
 
-> Architecture, the visual system, and the component inventory live in
-> **[DESIGN.md](./DESIGN.md)**.
+> The visual system and the thinking behind it live in **[DESIGN.md](./DESIGN.md)**.
+> How to add writing, and the rules about names, live in **[content/README.md](./content/README.md)**.
 
 ---
 
 ## Stack
 
-Zero build step — static files. Open `index.html` and it runs.
+Next.js App Router + TypeScript + Tailwind v4 + MDX, built with `output: 'export'`
+— so it compiles to plain static HTML and deploys anywhere the old site did.
 
 ```
-index.html              # homepage
-episafe.html            # EpiSafe case study
-assets/css/main.css     # design tokens + every style
-assets/js/main.js       # interactions (no dependencies)
-assets/fonts/           # Paul Grotesk (Thin / Regular / Bold)
-assets/img/             # real product renders, photos, logos
-DESIGN.md               # architecture, design system, roadmap
+app/                  routes; app/globals.css is the whole design system
+components/ui/        Monument, Ledger, Piece, Redacted, Plate, ChapterShell…
+components/scenes/    one bespoke interaction per chapter
+content/becoming/     the 20 chapters + 6 side chapters (MDX)
+content/writing/      the archive — one file per piece
+lib/palette.ts        the colour arc: every chapter as one setting of one system
+lib/content.ts        build-time content loading, Zod-validated frontmatter
+public/               static assets + the three "after hours" rooms
+source-images/        full-resolution originals — never deployed
+scripts/              check-names, images, archive-index
 ```
 
-JetBrains Mono loads from Google Fonts; Paul Grotesk is bundled locally.
-
----
-
-## Run it locally
-
-Serve it (so relative font/image paths resolve):
+## Run it
 
 ```bash
-python3 -m http.server 8000   # then open http://localhost:8000
+npm install
+npm run dev          # http://localhost:3000
+npm run build        # → out/  (name check → archive index → next build)
+npm start            # serve the built output
+npm run images       # regenerate responsive WebP after adding a photo
 ```
+
+## Deploy
+
+Any static host — Vercel, Netlify, Cloudflare Pages, GitHub Pages. Publish `out/`.
+No server, no env vars.
 
 ---
 
 ## What's signature here
 
-- **Fly-down phone dock** — the hero phone (EpiSafe on the back of a phone)
-  detaches and flies down the page as you scroll, docking precisely into the
-  EpiSafe card. One shared element driven by scroll progress.
-- **Per-role theme-morph** — the whole palette tweens from **EpiSafe orange**
-  to **WPI crimson** in the SGA section, then a **neutral** close. The nav pill
-  tracks the active role.
-- **Polish layer** — scroll-progress bar, section index rail, custom cursor
-  with a "View" label, 3D-tilt media cards, count-up stats, scatter→assemble
-  headlines, a preloader, plus aurora / film-grain / vignette background FX.
+- **One dial, twenty-six settings.** Every chapter sets `--chroma` (0 → 1), which
+  scales the saturation of the entire chapter. Stone is bright but chromaless;
+  Flesh and Becoming are full spectrum. Same stylesheet throughout.
+- **The typeface performs the story.** Fraunces' variable `SOFT` and `WONK` axes
+  are driven from the same per-chapter number, so the letterforms travel from
+  geometric and flat-terminaled in Stone to soft and organic by Flesh.
+- **`<Ledger>`** — memory / fact / feeling / question / poem / prayer / anger /
+  interpretation / later. Something written in pain is not automatically history,
+  and the site keeps the distinction on the page. The same values are the
+  archive's filter facets.
+- **Eight scenes**, one per chapter, each making its chapter's argument before the
+  chapter states it — including **Open Hands**, where holding the object does
+  nothing at all and the page opens only when you let go.
+- **The instrument** at `/writing` — press a letter, get a shape, a synthesised
+  tone and a poem. No audio files; oscillators only, silent until asked.
+- **The map** at `/becoming/map` — the concepts as a ring, computed from the
+  writing rather than drawn. Position is where an idea sits in the twenty
+  chapters, size is how much there is, hue is the chapter it belongs to and
+  chroma is how far along the arc it sits. It surfaces the contradictions,
+  including the site's own thesis: *mera dil patthar ho gaya* vs *take the stone*.
+- **Names are enforced, not just intended.** `npm run build` fails if a private
+  name reaches `content/`. See [content/README.md](./content/README.md).
 
-Everything degrades gracefully and is disabled under `prefers-reduced-motion`.
+## The rooms that stayed dark
 
----
+`/play.html` (Beat Lab, arcade, Darkroom) and `/void.html` (a text terminal, now
+with an `archive` command that queries the writing) are deliberately still dark.
+They're the after-hours part of the site, not an oversight. `/crm.html` is a
+passcode-gated lead tracker whose data never leaves the browser.
 
-## Editing
+## Verified
 
-| To change… | Edit… |
-|---|---|
-| Copy / sections / stats | `index.html` and `episafe.html` |
-| Colours, type, motion, theme-morph | tokens at the top of `assets/css/main.css` |
-| Behaviour (dock, cursor, reveal, theme) | `assets/js/main.js` |
-| Background FX default | the inline `<script>` in each page head (`data-bg`, `--fx-intensity`, `--fx-speed`) |
-
-The background FX (`aurora` by default, dialed to a subtle ~0.6 intensity) can be
-set to `mesh`, `grid`, `spotlight`, or `void` by changing `data-bg` in the head.
-
----
-
-## Before you launch — checklist
-
-- [x] Real product renders, team/lab photos, awards, Paul Grotesk, logo — all wired in.
-- [x] EpiSafe case-study page built and linked.
-- [ ] Confirm award/stat wording (Demo Day placement, $6.6B market, 11.4 mm, 0.3 mg, 56%).
-- [ ] Add **GitHub** and a **resume** link (Connect + nav) if you want them.
-- [ ] Optimise `demoday.jpg` (~10 MB) and other large renders before launch (e.g. to WebP).
-- [ ] Confirm the **LinkedIn** URL.
-
----
-
-## Deploy
-
-Any static host. Easiest: **GitHub Pages**, **Netlify**, **Vercel**, or
-**Cloudflare Pages** — push the repo, point `aaryanpanchal.com` at it. No server,
-no env vars.
-
----
-
-## Roadmap
-
-- **Now:** confirm copy/stats, add GitHub + resume links, compress large images.
-- **Next:** a third role/theme as Aaryan adds work (just another
-  `data-section-theme` block); real SGA reach numbers; interview pull-quotes in
-  the case study.
-- **Later:** custom OG image, privacy-friendly analytics, performance pass.
+Static export of 61 pages. No 404s, console errors, or horizontal overflow at
+1440px or 390px. Every scene keeps its meaning under `prefers-reduced-motion` and
+is operable by keyboard alone. Text contrast passes WCAG AA on every chapter
+including the twilight and night ones (body 8:1–12:1).

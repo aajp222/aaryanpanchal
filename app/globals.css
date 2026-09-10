@@ -1,0 +1,254 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════
+   aaryanpanchal.com — bright editorial system.
+   Black is a text colour here, never a page colour.
+   ═══════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* Grounds — warm whites. The site lives in daylight. */
+  --color-paper: #fbf9f4;
+  --color-cream: #f4efe4;
+  --color-chalk: #ffffff;
+  --color-sky-pale: #eaf1f6;
+  --color-bone: #efe9dc;
+
+  /* Ink — warm near-black through to a soft graphite. */
+  --color-ink: #14110e;
+  --color-ink-2: #4a443c;
+  --color-ink-3: #8a8177;
+  --color-ink-4: #b4aca0;
+
+  --color-rule: rgb(20 17 14 / 0.14);
+  --color-rule-soft: rgb(20 17 14 / 0.07);
+
+  /* Named hues, for the surface and for chapters that want a literal colour. */
+  --color-marigold: #e4922b;
+  --color-terracotta: #c0603a;
+  --color-sunset: #f0a31e;
+  --color-verdant: #4e8c5b;
+  --color-sky: #6fa8d6;
+  --color-deep: #2f4f7a;
+  --color-dusk: #5a6b8c;
+  --color-blush: #f2b8a2;
+  --color-brick: #b04a3c;
+  --color-gold: #d4a233;
+
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-jb), ui-monospace, "SF Mono", Menlo, monospace;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ── The dial ────────────────────────────────────────────────────
+   Every chapter sets --chroma (0 → 1) plus the OKLCH components of
+   its accent and ground. Saturation across the whole chapter is one
+   multiplication, so STONE's greys and BECOMING's full spectrum are
+   the same stylesheet at two settings.
+   --------------------------------------------------------------- */
+:root {
+  --chroma: 1;
+
+  --ground-l: 98.2%;
+  --ground-c: 0.008;
+  --ground-h: 85;
+
+  --accent-l: 62%;
+  --accent-c: 0.15;
+  --accent-h: 60;
+
+  --accent2-l: 55%;
+  --accent2-c: 0.11;
+  --accent2-h: 250;
+
+  --ink-h: 70;
+
+  --becoming: 0;
+
+  /* How much of the site the visitor has walked through (0 → 1).
+     Nudges the light a few degrees warmer. Absence is invisible. */
+  --warmth: 0;
+}
+
+/* Custom properties resolve where they are declared, so a chapter that
+   overrides --chroma or --becoming has to re-derive everything downstream of
+   them. Both scopes run the same derivation over their own inputs. */
+:root,
+.chapter {
+  /* Variable-font axes. Rigid at 0, organic at 1. */
+  --soft: calc(10 * var(--becoming));
+  --wonk: var(--becoming);
+
+  --ground: oklch(var(--ground-l) calc(var(--ground-c) * var(--chroma)) var(--ground-h));
+  --accent: oklch(var(--accent-l) calc(var(--accent-c) * var(--chroma)) var(--accent-h));
+  --accent-2: oklch(var(--accent2-l) calc(var(--accent2-c) * var(--chroma)) var(--accent2-h));
+  --accent-wash: oklch(var(--accent-l) calc(var(--accent-c) * var(--chroma)) var(--accent-h) / 0.12);
+  --accent-hair: oklch(var(--accent-l) calc(var(--accent-c) * var(--chroma)) var(--accent-h) / 0.34);
+  /* The accent is tuned for fills, rules and shapes. As small text it is too
+     light on the palest chapters, so text uses this deeper sibling instead. */
+  --accent-ink: color-mix(in oklab, var(--accent) 58%, var(--page-ink));
+  --page-ink: oklch(var(--ink-l, 22%) calc(var(--ink-c, 0.02) * var(--chroma)) var(--ink-h));
+
+  /* Secondary inks are mixed toward the ground rather than fixed, so they stay
+     legible on APART's twilight and PSALMS' night instead of sinking into them. */
+  --color-ink-2: color-mix(in oklab, var(--page-ink) 76%, var(--ground));
+  --color-ink-3: color-mix(in oklab, var(--page-ink) 70%, var(--ground));
+  --color-ink-4: color-mix(in oklab, var(--page-ink) 36%, var(--ground));
+  --color-rule: color-mix(in oklab, var(--page-ink) 16%, var(--ground));
+  --color-rule-soft: color-mix(in oklab, var(--page-ink) 9%, var(--ground));
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--page-ink);
+    font-family: var(--font-sans);
+    font-size: clamp(1.02rem, 0.97rem + 0.22vw, 1.14rem);
+    line-height: 1.66;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    transition: background-color 900ms var(--ease-out-soft), color 900ms var(--ease-out-soft);
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  img, video { display: block; max-width: 100%; }
+
+  /* Display type carries the transformation in its letterforms. */
+  .font-display,
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-variation-settings: "SOFT" var(--soft), "WONK" var(--wonk);
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  /* A chapter is a scope, not a page — side chapters and inline
+     excerpts get the same treatment by carrying the same class. */
+  .chapter {
+    background: var(--ground);
+    color: var(--page-ink);
+    transition: background-color 900ms var(--ease-out-soft), color 900ms var(--ease-out-soft);
+  }
+
+  .rule {
+    border: 0;
+    border-top: 1px solid var(--color-rule-soft);
+  }
+
+  /* Editorial measure. Poetry and prose want ~62ch, monuments want none. */
+  .measure { max-width: 62ch; }
+  .measure-tight { max-width: 46ch; }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  /* The page eyebrow carries the page's colour — it is the smallest piece of
+     chrome on the page and the one that appears on every single one.
+     Scoped to main: the site nav is a <header> too, and must not be caught. */
+  main header > .label:first-child {
+    color: var(--accent-ink);
+  }
+}
+
+/* Motion is meaning here, so when it's unwelcome the meaning must
+   survive without it: everything lands in its final state. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Chapter prose ───────────────────────────────────────────────
+   Body copy is set in the sans; the serif is reserved for the things
+   that are meant to be felt — monuments, poems, ledger blocks. The
+   contrast is what makes a poem read as a poem.
+   --------------------------------------------------------------- */
+.prose-chapter {
+  font-size: clamp(1.1rem, 1rem + 0.34vw, 1.26rem);
+  line-height: 1.75;
+}
+.prose-chapter > p {
+  margin-block: 1.45em;
+  color: color-mix(in oklab, var(--page-ink) 86%, var(--ground));
+}
+.prose-chapter > p:first-child { margin-top: 0; }
+.prose-chapter strong { font-weight: 500; color: var(--page-ink); }
+.prose-chapter em { font-style: italic; }
+.prose-chapter h2 {
+  margin-block: 2.6em 0.9em;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  line-height: 1.12;
+}
+.prose-chapter h3 {
+  margin-block: 2.2em 0.7em;
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  line-height: 1.2;
+}
+.prose-chapter ul { margin-block: 1.45em; padding-left: 1.1em; list-style: none; }
+.prose-chapter ul > li { position: relative; margin-block: 0.5em; }
+.prose-chapter ul > li::before {
+  content: "";
+  position: absolute;
+  left: -1.1em;
+  top: 0.72em;
+  width: 0.4em;
+  height: 1px;
+  background: var(--accent);
+}
+.prose-chapter hr {
+  margin-block: 3.5em;
+  border: 0;
+  border-top: 1px solid var(--color-rule-soft);
+}
+.prose-chapter a {
+  border-bottom: 1px solid var(--accent-hair);
+  transition: border-color 200ms;
+}
+.prose-chapter a:hover { border-color: var(--accent); }
+
+/* A monument breaks the reading measure on purpose, but keeps the page's
+   centre line — full-bleed backgrounds, centred type. */
+.monument-break {
+  margin-inline: calc(50% - 50vw);
+  padding-inline: max(clamp(1.25rem, 4vw, 3.5rem), calc(50vw - 33rem));
+  max-width: 100vw;
+}
+
+
+/* ── Locked chapters ──────────────────────────────────────────────
+   The pre-paint script in LockScript sets data-locked on <html> before
+   anything renders, so neither the writing nor the gate ever flashes.
+   --------------------------------------------------------------- */
+html[data-locked] .chapter-body { display: none; }
+html:not([data-locked]) .chapter-gate { display: none; }
