@@ -18,16 +18,48 @@ const WANTS = [
   'to be enough', 'more', 'more',
 ];
 
-/** Stable scatter — the same every visit, so the page has a memory of itself. */
-function place(i: number) {
-  const r = (n: number) => { const s = Math.sin(i * 374.7 + n * 91.3) * 10000; return s - Math.floor(s); };
-  return {
-    left: `${6 + r(1) * 84}%`,
-    top: `${5 + r(2) * 86}%`,
-    fontSize: `${0.85 + r(3) * 1.9}rem`,
-    rotate: `${(r(4) - 0.5) * 14}deg`,
-  };
+/**
+ * Placement.
+ *
+ * The first version scattered these at random percentages, which piled half of
+ * them on top of each other in the middle of the screen — "the offer",
+ * "a girlfriend" and "a title" were sitting in the same square inch and none of
+ * them could be read. Crowded is the point of this scene; illegible is not,
+ * because the reader is supposed to feel the weight of reading all of it before
+ * watching it go.
+ *
+ * So the words sit in a grid — one per cell, which makes overlap structurally
+ * impossible — and the scatter comes from where each word sits *inside* its own
+ * cell, plus size and a degree or two of tilt. Same restless feel, every word
+ * readable, and it reflows on any screen for free.
+ */
+
+/** Deterministic per-word, so the page looks the same on every visit. */
+function jitter(i: number, n: number): number {
+  const s = Math.sin(i * 374.7 + n * 91.3) * 10000;
+  return s - Math.floor(s);
 }
+
+/** Long phrases get smaller type, so nothing has to fight its own cell. */
+function sizeFor(word: string, i: number): string {
+  const j = jitter(i, 3);
+  if (word.length <= 6) return `clamp(1.5rem, ${(2.8 + j * 1.8).toFixed(2)}vw, ${(2.6 + j * 1.3).toFixed(2)}rem)`;
+  if (word.length <= 14) return `clamp(1.1rem, ${(1.8 + j * 1).toFixed(2)}vw, ${(1.6 + j * 0.6).toFixed(2)}rem)`;
+  return `clamp(0.88rem, ${(1.15 + j * 0.45).toFixed(2)}vw, ${(1.14 + j * 0.24).toFixed(2)}rem)`;
+}
+
+const ALIGN = ['start', 'center', 'end'] as const;
+
+/**
+ * The order they leave in. Array order would clear the grid top-left to
+ * bottom-right like a wiper; scattering it makes the pile thin out from
+ * everywhere at once, which is closer to how this actually went.
+ * Deterministic, so it is the same on every visit.
+ */
+const EXIT_ORDER = WANTS.map((_, i) => i).sort(
+  (a, b) => jitter(a, 7) - jitter(b, 7)
+);
+const EXIT_RANK = new Map(EXIT_ORDER.map((wordIndex, rank) => [wordIndex, rank]));
 
 export default function Crowded() {
   const ref = useRef<HTMLDivElement>(null);
@@ -79,23 +111,26 @@ export default function Crowded() {
   }
 
   return (
-    <div ref={ref} className="monument-break relative my-[clamp(3rem,8vw,6rem)] h-[320svh]">
+    <div data-scene="crowded" ref={ref} className="monument-break relative my-[clamp(3rem,8vw,6rem)] h-[320svh]">
       <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden">
-        {/* The pile */}
-        <div aria-hidden className="absolute inset-0">
+        {/* The pile. One word per grid cell — they can crowd, but they
+            cannot collide. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 grid grid-cols-2 content-between gap-x-4 gap-y-2 px-[clamp(1rem,5vw,4rem)] py-[clamp(2rem,6vw,4.5rem)] sm:grid-cols-3 lg:grid-cols-4"
+        >
           {WANTS.map((w, i) => {
-            const p = place(i);
-            const away = i < gone;
+            const away = (EXIT_RANK.get(i) ?? i) < gone;
             return (
               <span
                 key={`${w}-${i}`}
-                className="absolute whitespace-nowrap font-display italic text-[var(--color-ink-2)]"
+                className="whitespace-nowrap font-display italic leading-none text-[var(--color-ink-2)]"
                 style={{
-                  left: p.left,
-                  top: p.top,
-                  fontSize: p.fontSize,
+                  fontSize: sizeFor(w, i),
+                  justifySelf: ALIGN[Math.floor(jitter(i, 1) * 3)],
+                  alignSelf: ALIGN[Math.floor(jitter(i, 2) * 3)],
                   opacity: away ? 0 : 1,
-                  transform: `rotate(${p.rotate}) translateY(${away ? '-2.5rem' : '0'})`,
+                  transform: `rotate(${((jitter(i, 4) - 0.5) * 4).toFixed(2)}deg) translateY(${away ? '-2.5rem' : '0'})`,
                   transition: 'opacity 700ms var(--ease-out-soft), transform 900ms var(--ease-out-soft)',
                   filter: away ? 'blur(3px)' : 'none',
                 }}
@@ -108,7 +143,7 @@ export default function Crowded() {
 
         {/* What is left when the pile is gone */}
         <div
-          className="relative text-center"
+          className="relative rounded-sm px-8 py-6 text-center"
           style={{
             opacity: cleared ? 1 : 0,
             transform: cleared ? 'none' : 'translateY(1rem)',
