@@ -10,3 +10,12 @@ node_modules/
 npm-debug.log*
 .env
 .env.local
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Private — real names for the redaction guard. Never committed, never bundled.
+private/
