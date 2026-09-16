@@ -94,10 +94,10 @@ export default function WorkPage() {
           </Reveal>
           <Reveal delay={100}>
             <h2 className="font-display text-[clamp(1.8rem,4vw,3rem)] leading-tight">
-              Co-Marketing Chair
+              Marketing Chair
             </h2>
             <p className="mt-5 text-[var(--color-ink-2)]">
-              As External Marketing Chair I run the public voice of WPI&#39;s Student Government —
+              As Marketing Chair I run the public voice of WPI&#39;s Student Government —
               Instagram, TikTok and the website. Elections, Senate recaps, Financial Fridays, Club of
               the Week, and every external club&#39;s promo request comes through marketing.
             </p>

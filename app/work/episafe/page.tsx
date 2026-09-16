@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 const FACTS = [
   ['Role', 'Founder & Product Lead'],
-  ['Timeline', '2024 — Present'],
+  ['Timeline', 'May 2025 — Present'],
   ['Focus', 'Mechanism · Discovery · FDA'],
   ['Status', 'Patent pending · CAD complete'],
 ];
@@ -173,7 +173,7 @@ export default function EpiSafePage() {
           src="demoday"
           alt="The EpiSafe team at WPI Demo Day 2025"
           sizes="100vw"
-          className="[&>img]:h-[clamp(18rem,45vw,32rem)]"
+          className="[&>img]:h-[clamp(18rem,45vw,32rem)] [&>img]:object-[50%_22%]"
         />
       </Reveal>
 

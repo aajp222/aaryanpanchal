@@ -20,8 +20,8 @@ export default function Footer() {
             <li><Link href="/work/" className="hover:text-[var(--page-ink)]">Work</Link></li>
             <li><Link href="/builds/" className="hover:text-[var(--page-ink)]">Builds</Link></li>
             <li><Link href="/writing/" className="hover:text-[var(--page-ink)]">Writing</Link></li>
-            <li><Link href="/becoming/" className="hover:text-[var(--page-ink)]">Becoming</Link></li>
             <li><Link href="/about/" className="hover:text-[var(--page-ink)]">About</Link></li>
+            <li><Link href="/resume/" className="hover:text-[var(--page-ink)]">Résumé</Link></li>
           </ul>
         </nav>
 

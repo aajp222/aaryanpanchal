@@ -9,6 +9,7 @@ const LINKS = [
   { href: '/builds/', label: 'Builds' },
   { href: '/writing/', label: 'Writing' },
   { href: '/about/', label: 'About' },
+  { href: '/resume/', label: 'Résumé' },
 ];
 
 export default function Nav() {
@@ -55,20 +56,6 @@ export default function Nav() {
               {l.label}
             </Link>
           ))}
-          {/* Becoming is not hidden — but it is a different kind of thing,
-              so it is set in the story's typeface rather than the site's. */}
-          <Link
-            href="/becoming/"
-            className="group relative font-display text-[1.06rem] italic transition-opacity hover:opacity-70"
-          >
-            Becoming
-            <span
-              aria-hidden
-              className={`absolute -right-2.5 top-1 h-1.5 w-1.5 rounded-full bg-[var(--accent)] transition-opacity ${
-                active('/becoming') ? 'opacity-100' : 'opacity-60'
-              }`}
-            />
-          </Link>
         </div>
 
         <button
@@ -93,13 +80,6 @@ export default function Nav() {
               <Link href={l.href} className="font-display text-4xl">{l.label}</Link>
             </li>
           ))}
-          <li className="mt-2 border-t border-[var(--color-rule-soft)] pt-6">
-            <Link href="/becoming/" className="font-display text-4xl italic">
-              Becoming
-              <span aria-hidden className="ml-2 inline-block h-2 w-2 rounded-full bg-[var(--accent)] align-middle" />
-            </Link>
-            <p className="label mt-2">The long story</p>
-          </li>
         </ul>
       </div>
     </header>

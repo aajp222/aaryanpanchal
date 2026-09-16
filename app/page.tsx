@@ -3,7 +3,6 @@ import Plate from '@/components/ui/Plate';
 import Monument from '@/components/ui/Monument';
 import Reveal from '@/components/ui/Reveal';
 import { Section, Wrap } from '@/components/ui/Section';
-import { getSpine } from '@/lib/content';
 import Tinted from '@/components/ui/Tinted';
 
 const ROLES = ['Engineer', 'Builder', 'Entrepreneur', 'Creative', 'Writer'];
@@ -15,8 +14,6 @@ const AWARDS = [
 ];
 
 export default function Home() {
-  const chapters = getSpine();
-
   return (
     <Tinted palette="home">
       {/* ── HERO ─────────────────────────────────────────────── */}
@@ -49,10 +46,9 @@ export default function Home() {
                 <Link href="/work/" className="border-b border-[var(--page-ink)] pb-1 transition-opacity hover:opacity-60">
                   See the work →
                 </Link>
-                <Link href="/becoming/" className="font-display text-[clamp(1.1rem,1.6vw,1.3rem)] italic transition-opacity hover:opacity-60">
-                  or read the longer story
-                  <span aria-hidden className="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-[var(--accent)] align-middle" />
-                </Link>
+                <a href="mailto:aaryanpanchal@icloud.com" className="border-b border-[var(--color-rule)] pb-1 text-[var(--color-ink-2)] transition-colors hover:border-[var(--page-ink)] hover:text-[var(--page-ink)]">
+                  Get in touch
+                </a>
               </div>
             </Reveal>
           </div>
@@ -135,7 +131,7 @@ export default function Home() {
           src="demoday"
           alt="The EpiSafe team accepting recognition at WPI Demo Day 2025"
           sizes="100vw"
-          className="[&>img]:h-[clamp(20rem,52vw,38rem)]"
+          className="[&>img]:h-[clamp(20rem,52vw,38rem)] [&>img]:object-[50%_22%]"
         />
       </Reveal>
       <Section className="!pt-[clamp(2.5rem,5vw,4rem)]">
@@ -150,40 +146,22 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ── BECOMING ─────────────────────────────────────────── */}
-      <section className="bg-[var(--color-cream)] py-[clamp(5rem,13vw,11rem)]">
+      {/* ── A DOOR, NOT A BILLBOARD ──────────────────────────
+           This used to be a full band explaining what Becoming is and
+           inviting you in. It isn't advertised any more: one unexplained
+           sentence, no label, no call to action. Anyone who wonders what it
+           means can click it. Anyone who doesn't has lost nothing. ── */}
+      <section className="border-y border-[var(--color-rule-soft)]">
         <Wrap>
-          <Reveal>
-            <p className="label mb-[clamp(2rem,4vw,3rem)]">The longer story</p>
-          </Reveal>
-          <Monument size="huge" as="h2" className="max-w-[17ch]">
-            A child once said his heart had <em className="italic">become stone</em>.
-          </Monument>
-          <div className="mt-12 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-end">
-            <Reveal delay={180}>
-              <p className="measure text-[1.08rem] text-[var(--color-ink-2)]">
-                <em className="font-display not-italic">Becoming</em> is {chapters.length} chapters about
-                everything that happened after — India, family, wanting, searching, love, faith, leaving, and
-                learning that a heart can break without going back to stone. It is the part of this website
-                that isn&#39;t a résumé.
-              </p>
-              <Link
-                href="/becoming/"
-                className="mt-10 inline-flex items-baseline gap-3 font-display text-[clamp(1.4rem,3vw,2.2rem)] italic transition-opacity hover:opacity-60"
-              >
-                Start at the beginning
-                <span aria-hidden>→</span>
-              </Link>
-            </Reveal>
-            <Reveal delay={280}>
-              <p className="font-display text-[clamp(1.1rem,2vw,1.5rem)] italic leading-snug text-[var(--color-ink-2)]">
-                mera dil patthar ho gaya.
-                <span className="mt-2 block not-italic text-[0.8em] text-[var(--color-ink-3)]">
-                  my heart became stone.
-                </span>
-              </p>
-            </Reveal>
-          </div>
+          <Link
+            href="/becoming/"
+            className="group block py-[clamp(4rem,11vw,9rem)]"
+            aria-label="mera dil patthar ho gaya"
+          >
+            <p className="font-display text-[clamp(1.4rem,3.4vw,2.4rem)] italic leading-snug text-[var(--color-ink-3)] transition-colors duration-500 group-hover:text-[var(--page-ink)]">
+              mera dil patthar ho gaya.
+            </p>
+          </Link>
         </Wrap>
       </section>
 
@@ -200,7 +178,7 @@ export default function Home() {
               />
               <h3 className="mt-5 font-display text-2xl">Student Government</h3>
               <p className="mt-2 text-[0.98rem] text-[var(--color-ink-2)]">
-                Co-Marketing Chair at WPI — the public voice of Student Government across three channels.
+                Marketing Chair at WPI — the public voice of Student Government across three channels.
               </p>
             </Link>
           </Reveal>

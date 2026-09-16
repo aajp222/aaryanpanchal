@@ -9,7 +9,7 @@ import Tinted from '@/components/ui/Tinted';
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'Aaryan Panchal — mechanical engineering at WPI, founder of EpiSafe, Co-Marketing Chair of Student Government. More interested in the question behind the question.',
+    'Aaryan Panchal — mechanical engineering at WPI, founder of EpiSafe, Marketing Chair of Student Government. More interested in the question behind the question.',
 };
 
 const FACTS = [
@@ -100,23 +100,17 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      {/* ── the bridge ── */}
-      <section className="bg-[var(--color-cream)] py-[clamp(4rem,10vw,9rem)]">
+      {/* A door rather than an invitation — see the homepage. */}
+      <section className="border-t border-[var(--color-rule-soft)]">
         <Wrap>
-          <Monument size="large" as="h2" className="max-w-[20ch]">
-            That&#39;s the part that fits on a résumé.
-          </Monument>
-          <Reveal delay={140}>
-            <p className="measure mt-8 text-[1.08rem] text-[var(--color-ink-2)]">
-              There&#39;s a longer version — about India, a heart that decided to be stone, and most of
-              what I&#39;ve had to learn since. It&#39;s twenty chapters and it doesn&#39;t have an ending yet.
+          <Link href="/becoming/" className="group block py-[clamp(3.5rem,9vw,7rem)]">
+            <p className="font-display text-[clamp(1.3rem,3vw,2.1rem)] italic leading-snug text-[var(--color-ink-3)] transition-colors duration-500 group-hover:text-[var(--page-ink)]">
+              there is a longer version of all this.
             </p>
-            <Link href="/becoming/" className="mt-10 inline-flex items-baseline gap-3 font-display text-[clamp(1.4rem,3vw,2.2rem)] italic transition-opacity hover:opacity-60">
-              Becoming <span aria-hidden>→</span>
-            </Link>
-          </Reveal>
+          </Link>
         </Wrap>
       </section>
+
     </Tinted>
   );
 }
