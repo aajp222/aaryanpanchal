@@ -1,0 +1,41 @@
+{
+  "type": "object",
+  "properties": {
+    "submittedAt": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "organization": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "availability": {
+      "type": "string"
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "comments": {
+      "type": "string"
+    },
+    "consent": {
+      "type": "string"
+    },
+    "formLanguage": {
+      "type": "string"
+    },
+    "submissionId": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}

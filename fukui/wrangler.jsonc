@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "fukui-interest",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "routes": [
+    { "pattern": "fukui.aaryanpanchal.com", "custom_domain": true }
+  ],
+  "workers_dev": false,
+  "observability": { "enabled": true }
+  // Secrets (set with `npx wrangler secret put <NAME>`, never committed):
+  //   FLOW_URL — the Power Automate "When an HTTP request is received" URL
+}
