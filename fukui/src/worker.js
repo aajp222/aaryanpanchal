@@ -118,6 +118,11 @@ async function register(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    // Plain-HTTP visitors get the HTTPS page (DEV is set only in local .dev.vars).
+    if (url.protocol === 'http:' && !env.DEV) {
+      url.protocol = 'https:';
+      return Response.redirect(url.toString(), 301);
+    }
     if (url.pathname === '/api/register') {
       if (request.method !== 'POST') return json({ ok: false }, 405);
       return register(request, env);

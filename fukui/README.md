@@ -26,7 +26,7 @@ credential; it is a Worker secret and never committed.
 1. Change text in `public/app.js` (both `en` and `ja` entries) — the English strings
    in `index.html` are only the no-JavaScript fallback, so keep them in step.
 2. Preview: `npm install && npm run dev` → http://localhost:8787
-   (submissions need a `.dev.vars` file with `FLOW_URL`).
+   (needs a `.dev.vars` file with `DEV=1` and, for submissions, `FLOW_URL`).
 3. Publish: `npm run deploy` (needs `npx wrangler login` once, on the Cloudflare
    account that owns aaryanpanchal.com).
 

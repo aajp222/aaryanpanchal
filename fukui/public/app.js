@@ -279,11 +279,12 @@
     }
   }
 
-  // Clear a field's error as soon as it's fixed (but don't nag while typing).
+  // Clear a field's error as soon as it's fixed. This runs on input only, never
+  // on blur: a message vanishing as focus leaves a field shifts the layout under
+  // the pointer and swallows the click on the next field.
   function recheck(name) {
-    if (!errors[name]) return;
-    var e = validate();
-    if (e[name]) errors[name] = e[name]; else delete errors[name];
+    if (!errors[name] || validate()[name]) return;
+    delete errors[name];
     renderErrors();
   }
 
@@ -354,14 +355,8 @@
     });
   });
 
-  form.addEventListener('input', function (ev) {
-    saveDraft();
-    var n = ev.target.name;
-    if (n === 'email' || n === 'name' || n === 'availability') return; // re-checked on blur
-    recheck(n);
-  });
-  form.addEventListener('change', function (ev) { saveDraft(); recheck(ev.target.name); });
-  form.addEventListener('focusout', function (ev) { if (ev.target.name) recheck(ev.target.name); });
+  form.addEventListener('input', function (ev) { saveDraft(); recheck(ev.target.name); });
+  form.addEventListener('change', saveDraft);
 
   document.querySelectorAll('[data-set-lang]').forEach(function (b) {
     b.addEventListener('click', function () { setLang(b.getAttribute('data-set-lang'), true); });
