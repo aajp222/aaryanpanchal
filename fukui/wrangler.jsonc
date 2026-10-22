@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "fukui-interest",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "routes": [
+    { "pattern": "fukui.aaryanpanchal.com", "custom_domain": true }
+  ],
+  "workers_dev": false,
+  "observability": { "enabled": true }
+  // Secrets (set with `npx wrangler secret put <NAME>`, never committed):
+  //   APPS_SCRIPT_URL — the Apps Script web-app /exec URL
+  //   RELAY_SECRET    — must match RELAY_SECRET in the Apps Script project
+}
