@@ -14,6 +14,5 @@
   "workers_dev": false,
   "observability": { "enabled": true }
   // Secrets (set with `npx wrangler secret put <NAME>`, never committed):
-  //   APPS_SCRIPT_URL — the Apps Script web-app /exec URL
-  //   RELAY_SECRET    — must match RELAY_SECRET in the Apps Script project
+  //   FLOW_URL — the Power Automate "When an HTTP request is received" URL
 }

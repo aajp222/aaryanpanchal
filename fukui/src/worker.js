@@ -1,10 +1,10 @@
 // fukui.aaryanpanchal.com — serves the static page from ./public and accepts
 // interest registrations at POST /api/register.
 //
-// Registrations are validated here, then forwarded to a private Google Apps
-// Script web app that appends one row to the team's tracker sheet. The relay's
-// URL and shared secret live only in Worker secrets (APPS_SCRIPT_URL,
-// RELAY_SECRET); nothing in ./public can reach the sheet directly.
+// Registrations are validated here, then forwarded to a private Power Automate
+// flow that adds one row to the team's Excel tracker. The flow's signed trigger
+// URL is the only credential and lives in the Worker secret FLOW_URL; nothing in
+// ./public can reach the workbook directly.
 
 const LANGS = { en: 'English', ja: 'Japanese', either: 'Either' };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -18,6 +18,9 @@ const json = (body, status = 200) =>
   });
 
 const str = (v) => (typeof v === 'string' ? v.trim() : '');
+
+// Excel would treat a leading = + - @ as a formula; the apostrophe makes it text.
+const cell = (v) => (/^[=+\-@\t\r]/.test(v) ? "'" + v : v);
 
 function validTimeZone(tz) {
   if (!tz || tz.length > 64) return false;
@@ -77,38 +80,37 @@ async function register(request, env) {
   const { data, fields } = validate(input);
   if (Object.keys(fields).length) return json({ ok: false, fields }, 400);
 
-  if (!env.APPS_SCRIPT_URL || !env.RELAY_SECRET) {
-    console.error('relay not configured');
+  if (!env.FLOW_URL) {
+    console.error('FLOW_URL not configured');
     return json({ ok: false }, 503);
   }
 
+  // Keys match the Excel table's column headers one-to-one.
   const row = {
-    secret: env.RELAY_SECRET,
-    id: data.id,
-    submittedAt: new Date().toISOString(),
-    name: data.name,
-    email: data.email,
-    organization: data.organization,
+    submittedAt: new Date().toISOString().replace('T', ' ').slice(0, 19),
+    name: cell(data.name),
+    email: cell(data.email),
+    organization: cell(data.organization),
     language: LANGS[data.language],
-    availability: data.availability,
+    availability: cell(data.availability),
     timezone: data.timezone,
-    comments: data.comments,
+    comments: cell(data.comments),
     consent: 'Yes',
     formLanguage: data.formLanguage === 'ja' ? '日本語' : 'English',
+    submissionId: data.id,
+    status: 'New',
   };
 
   try {
-    const res = await fetch(env.APPS_SCRIPT_URL, {
+    const res = await fetch(env.FLOW_URL, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(row),
-      redirect: 'follow',
     });
-    const body = await res.json().catch(() => ({}));
-    if (res.ok && body.ok) return json({ ok: true });
-    console.error('relay rejected', res.status, body.error || '');
+    if (res.ok) return json({ ok: true });
+    console.error('flow rejected', res.status, (await res.text()).slice(0, 300));
   } catch (err) {
-    console.error('relay unreachable', String(err));
+    console.error('flow unreachable', String(err));
   }
   return json({ ok: false }, 502);
 }
