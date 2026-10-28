@@ -115,6 +115,21 @@ async function register(request, env) {
   return json({ ok: false }, 502);
 }
 
+// Tell the page which country the visitor is in (from Cloudflare, never the IP
+// itself) so app.js can pick Japanese for visitors in Japan whose phone is set to
+// neither Japanese nor English.
+function withCountry(res, request) {
+  const country = request.cf && request.cf.country;
+  if (!country || !(res.headers.get('content-type') || '').includes('text/html')) return res;
+  const out = new HTMLRewriter()
+    .on('html', { element: (el) => el.setAttribute('data-country', country) })
+    .transform(res);
+  const headers = new Headers(out.headers);
+  headers.delete('etag'); // the body now varies by visitor
+  headers.set('cache-control', 'private, no-cache');
+  return new Response(out.body, { status: out.status, headers });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -127,6 +142,6 @@ export default {
       if (request.method !== 'POST') return json({ ok: false }, 405);
       return register(request, env);
     }
-    return env.ASSETS.fetch(request);
+    return withCountry(await env.ASSETS.fetch(request), request);
   },
 };

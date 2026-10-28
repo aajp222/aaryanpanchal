@@ -173,8 +173,12 @@
     if (q && T[q]) return q;
     var saved = store('local', LANG_KEY);
     if (saved && T[saved]) return saved;
+    // The phone's language decides; only when it's neither Japanese nor English
+    // does being in Japan (country from the server) tip it to Japanese.
     var nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
-    return /^ja\b/i.test(nav) ? 'ja' : 'en';
+    if (/^ja\b/i.test(nav)) return 'ja';
+    if (/^en\b/i.test(nav)) return 'en';
+    return document.documentElement.getAttribute('data-country') === 'JP' ? 'ja' : 'en';
   }
 
   // ── time zones (JST first and selected by default) ─
