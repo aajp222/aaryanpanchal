@@ -40,6 +40,17 @@ a:hover { text-decoration-thickness: 2px; }
 
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
+/* ── availability banner ─────────────────────────── */
+.banner { background: var(--ink); color: var(--paper); font-size: 15px; line-height: 1.5; }
+.banner p {
+  max-width: 38rem; margin: 0 auto; padding: 12px var(--gutter);
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
+}
+.banner a { font-weight: 700; white-space: nowrap; }
+.banner a::after { content: " →"; }
+.banner a:focus-visible { outline-color: var(--paper); }
+
 /* ── language switch ─────────────────────────────── */
 .bar { display: flex; justify-content: flex-end; padding-top: 20px; }
 .lang { display: flex; align-items: center; gap: 2px; font-size: 15px; color: var(--muted); }

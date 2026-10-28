@@ -13,6 +13,8 @@
       affil: 'Worcester Polytechnic Institute',
       intro1: 'We are a WPI student research team studying Fukui’s seafood heritage, regional certifications, and local communities.',
       intro2: 'We would value hearing from people connected to Fukui’s seafood. If you may be open to an interview, please register your interest below.',
+      bannerText: 'We’re available for interviews Oct 31 – Nov 2. Let’s plan a time.',
+      bannerLink: 'Register below',
       cta: 'Register interest in an interview',
       formTitle: 'Register interest',
       formNote: 'This form only registers your interest. It is not a confirmed appointment — our team will contact you by email to arrange a time.',
@@ -59,6 +61,8 @@
       affil: 'ウースター工科大学（WPI）',
       intro1: '私たちはウースター工科大学（WPI）の学生研究チームです。福井の水産文化、地域の認証制度、そして地域社会について研究しています。',
       intro2: '福井の海の幸に関わる皆さまのお話を、ぜひお聞かせください。インタビューにご協力いただける可能性がある方は、下記よりご登録をお願いいたします。',
+      bannerText: '10月31日〜11月2日にインタビューが可能です。ご都合をお聞かせください。',
+      bannerLink: '登録はこちら',
       cta: 'インタビュー協力の希望を登録',
       formTitle: '協力希望の登録',
       formNote: 'このフォームはご協力の希望を伺うためのもので、日程が確定するものではありません。後日、研究チームからメールでご連絡し、日時を調整いたします。',
@@ -99,6 +103,9 @@
       errServer: 'サーバー側で問題が発生しました。入力内容はそのまま残っています。しばらくしてからもう一度お試しいただくか、' + MAIL + ' までメールでご連絡ください。'
     }
   };
+
+  // The availability banner hides itself once Nov 2 is over in Japan.
+  var BANNER_UNTIL = Date.parse('2026-11-03T00:00:00+09:00');
 
   var DRAFT_KEY = 'fukui-interest-draft';
   var LANG_KEY = 'fukui-lang';
@@ -362,10 +369,14 @@
     b.addEventListener('click', function () { setLang(b.getAttribute('data-set-lang'), true); });
   });
 
-  // Move focus into the form when the call-to-action is used.
-  document.querySelector('a[href="#register"]').addEventListener('click', function () {
-    setTimeout(function () { form.hidden ? success.focus() : form.name.focus({ preventScroll: true }); }, 350);
+  // Move focus into the form when a call-to-action is used.
+  document.querySelectorAll('a[href="#register"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      setTimeout(function () { form.hidden ? success.focus() : form.name.focus({ preventScroll: true }); }, 350);
+    });
   });
+
+  document.getElementById('banner').hidden = Date.now() >= BANNER_UNTIL;
 
   buildZones();
   loadDraft();
