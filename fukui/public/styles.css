@@ -42,11 +42,19 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ── availability banner ─────────────────────────── */
 .banner { background: var(--ink); color: var(--paper); font-size: 15px; line-height: 1.5; }
-.banner p {
+.banner summary, .banner p {
   max-width: 38rem; margin: 0 auto; padding: 12px var(--gutter);
   padding-left: max(var(--gutter), env(safe-area-inset-left));
   padding-right: max(var(--gutter), env(safe-area-inset-right));
 }
+.banner summary { display: block; list-style: none; cursor: pointer; }
+.banner summary::-webkit-details-marker { display: none; }
+.banner summary:focus-visible { outline: 2px solid var(--paper); outline-offset: -4px; }
+.banner-more { font-weight: 700; white-space: nowrap; text-decoration: underline; text-underline-offset: 0.2em; }
+.banner-more::after { content: "▾"; display: inline-block; margin-left: 0.3em; transition: transform 0.15s; }
+.banner details[open] .banner-more::after { transform: rotate(180deg); }
+.banner p { padding-top: 0; color: #dcd9d9; }
+@media (prefers-reduced-motion: reduce) { .banner-more::after { transition: none; } }
 .banner a { font-weight: 700; white-space: nowrap; }
 .banner a::after { content: " →"; }
 .banner a:focus-visible { outline-color: var(--paper); }
