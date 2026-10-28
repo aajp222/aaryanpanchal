@@ -146,6 +146,8 @@ input[type="radio"], input[type="checkbox"] {
 .contact h2 { font-size: 16px; margin: 0 0 6px; }
 .contact p { margin: 0 0 32px; overflow-wrap: anywhere; }
 .team { list-style: none; margin: 0; padding: 0; }
+.team a { text-decoration-color: var(--line); }
+.team a:hover { text-decoration-color: var(--ink); }
 
 footer { padding-top: 72px; padding-bottom: max(40px, env(safe-area-inset-bottom)); font-size: 14px; color: var(--muted); }
 footer p { margin: 0; }

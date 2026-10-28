@@ -246,6 +246,34 @@
 
   function fieldEl(name) { return TARGET[name] ? TARGET[name]() : form[name]; }
 
+  // When sending fails, the email link in the notice opens a draft that
+  // already contains the person's answers, so they can just press Send.
+  var MAIL_LABELS = {
+    en: { subject: 'Interview interest – Fukui seafood heritage', intro: 'Hello, I tried to register through the website form but it failed. My answers are below.',
+          name: 'Name', email: 'Email', organization: 'Organization / role', language: 'Preferred interview language',
+          availability: 'Availability', timezone: 'Time zone', comments: 'Comments', consent: 'Agreed to be contacted', yes: 'Yes', no: 'No', id: 'Submission ID' },
+    ja: { subject: 'インタビュー参加希望 – 福井の水産遺産', intro: 'ウェブサイトのフォームから登録しようとしましたが、送信できませんでした。回答は以下のとおりです。',
+          name: 'お名前', email: 'メールアドレス', organization: 'ご所属・役職', language: 'インタビューの希望言語',
+          availability: 'ご都合の良い日時', timezone: 'タイムゾーン', comments: 'コメント', consent: '連絡への同意', yes: 'はい', no: 'いいえ', id: '送信ID' }
+  };
+  var LANG_NAMES = { en: { en: 'English', ja: 'Japanese', either: 'Either' }, ja: { en: '英語', ja: '日本語', either: 'どちらでも' } };
+
+  function answersMailto() {
+    var L = MAIL_LABELS[lang] || MAIL_LABELS.en;
+    var picked = (form.querySelector('input[name="language"]:checked') || {}).value || '';
+    var lines = [L.intro, '',
+      L.name + ': ' + form.name.value.trim(),
+      L.email + ': ' + form.email.value.trim(),
+      L.organization + ': ' + form.organization.value.trim(),
+      L.language + ': ' + ((LANG_NAMES[lang] || LANG_NAMES.en)[picked] || ''),
+      L.availability + ': ' + form.availability.value.trim(),
+      L.timezone + ': ' + form.timezone.value,
+      L.comments + ': ' + form.comments.value.trim(),
+      L.consent + ': ' + (form.consent.checked ? L.yes : L.no),
+      L.id + ': ' + (submissionId || '')];
+    return 'mailto:' + CONTACT + '?subject=' + encodeURIComponent(L.subject) + '&body=' + encodeURIComponent(lines.join('\r\n'));
+  }
+
   function renderErrors() {
     var dict = T[lang];
     ORDER.forEach(function (name) {
@@ -262,6 +290,7 @@
     var keys = ORDER.filter(function (n) { return errors[n]; });
     if (notice) {
       summary.innerHTML = dict[notice];
+      summary.querySelectorAll('a[href^="mailto:"]').forEach(function (a) { a.href = answersMailto(); });
       summary.hidden = false;
     } else if (keys.length) {
       summary.innerHTML = '';
